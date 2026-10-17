@@ -44,7 +44,7 @@ public sealed class ScoreWeights
 {
     public int ManagedPath { get; set; } = 100;
 
-    public int Completeness { get; set; } = 40;
+    public int Completeness { get; set; } = 60;
 
     public int OnDisk { get; set; } = 30;
 
@@ -52,7 +52,7 @@ public sealed class ScoreWeights
 
     public int Metadata { get; set; } = 10;
 
-    public int WatchHistory { get; set; } = 15;
+    public int WatchHistory { get; set; } = 5;
 
     public int DateAdded { get; set; } = 3;
 

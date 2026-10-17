@@ -121,11 +121,11 @@ Score per copy = sum of signals, each from 0 to its weight (all adjustable, "res
 | Signal | Default weight | Points |
 | --- | --- | --- |
 | Path managed by Sonarr/Radarr | 100 | full if managed |
-| Completeness (series) | 40 | weight × episodes / expected |
+| Completeness (series) | 60 | weight × episodes / expected |
 | On disk and readable | 30 | weight × files present / files |
 | Quality | 20 | weight × resolution class / best (size not used) |
 | Metadata | 10 | ids 40%, poster 30%, backdrop 15%, overview 15% |
-| Watch history | 15 | weight × plays / most plays |
+| Watch history | 5 | weight × plays / most plays (low: watch data can be copied to the kept copy) |
 | Date added | 3 | older copy (or newer, setting) |
 | Preferred drive | 5 | if on the preferred drive |
 
