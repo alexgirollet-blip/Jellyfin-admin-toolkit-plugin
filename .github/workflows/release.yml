@@ -1,0 +1,142 @@
+name: Release
+
+# Two ways to release:
+#  1. Actions > Release > Run workflow, enter a version (e.g. 1.0.0.0). The workflow tags the default branch.
+#  2. Push a tag: git tag -a v1.0.0.0 -m "notes" && git push origin v1.0.0.0
+# The workflow builds and tests, checks binary compatibility with the target Jellyfin version, zips the DLL,
+# publishes a GitHub Release, and writes the version (sourceUrl, MD5 checksum, targetAbi, changelog, timestamp)
+# into manifest.json on the default branch, then verifies the published manifest and zip.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (four parts, e.g. 1.0.0.0)'
+        required: true
+      notes:
+        description: 'Changelog / release notes'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.repository.default_branch || github.ref }}
+
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Work out version, tag and notes
+        id: ver
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          INPUT_NOTES: ${{ github.event.inputs.notes }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            v="${INPUT_VERSION#v}"; tag="v$v"
+          else
+            tag="${GITHUB_REF_NAME}"; v="${tag#v}"
+          fi
+          if ! [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then echo "Version must look like 1.2.3 or 1.2.3.4 (got $v)"; exit 1; fi
+          if [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then v="$v.0"; fi
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            notes="$INPUT_NOTES"
+            if git rev-parse "$tag" >/dev/null 2>&1; then echo "Tag $tag already exists"; exit 1; fi
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$tag" -m "${notes:-Admin Toolkit $v}"
+            git push origin "$tag"
+          else
+            notes="$(git tag -l --format='%(contents)' "$tag" | sed '/^-----BEGIN PGP/,$d')"
+          fi
+          if [ -z "$notes" ]; then notes="$(python3 -c "import re;t=open('build.yaml').read();m=re.search(r'^changelog:\s*>\s*\n((?:\s+.*\n?)+)', t, re.M);print(' '.join(l.strip() for l in m.group(1).splitlines()) if m else '')")"; fi
+          if [ -z "$notes" ]; then notes="Admin Toolkit $v"; fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          { echo "notes<<ADMINTOOLKIT_EOF"; echo "$notes"; echo "ADMINTOOLKIT_EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Jellyfin version consistency
+        run: python3 .github/scripts/check_versions.py
+
+      - name: Test
+        run: dotnet test Jellyfin.Plugin.AdminToolkit.sln -c Release
+
+      - name: Build plugin
+        run: |
+          v='${{ steps.ver.outputs.version }}'
+          dotnet publish src/Jellyfin.Plugin.AdminToolkit/Jellyfin.Plugin.AdminToolkit.csproj -c Release -o publish -p:Version=$v -p:AssemblyVersion=$v -p:FileVersion=$v
+
+      - name: Binary compatibility with the target Jellyfin version
+        run: |
+          abi=$(python3 -c "import re;print(re.search(r'targetAbi:\s*\"([0-9]+\.[0-9]+\.[0-9]+)', open('build.yaml').read()).group(1))")
+          dotnet build tools/ApiCompat -c Release -p:JellyfinVersion=$abi
+          dotnet tools/ApiCompat/bin/Release/net9.0/ApiCompat.dll publish/Jellyfin.Plugin.AdminToolkit.dll
+
+      - name: Package zip
+        id: pkg
+        run: |
+          v='${{ steps.ver.outputs.version }}'
+          zip="admin-toolkit_${v}.zip"
+          mkdir -p artifacts
+          (cd publish && zip -j "../artifacts/${zip}" Jellyfin.Plugin.AdminToolkit.dll)
+          unzip -l "artifacts/${zip}"
+          echo "zip=artifacts/${zip}" >> "$GITHUB_OUTPUT"
+          echo "name=${zip}" >> "$GITHUB_OUTPUT"
+          md5sum "artifacts/${zip}"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ steps.ver.outputs.notes }}
+        run: |
+          tag='${{ steps.ver.outputs.tag }}'
+          printf '%s\n' "$NOTES" > notes.txt
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "${{ steps.pkg.outputs.zip }}" --clobber
+          else
+            gh release create "$tag" "${{ steps.pkg.outputs.zip }}" --title "Admin Toolkit ${{ steps.ver.outputs.version }}" --notes-file notes.txt
+          fi
+
+      - name: Check out default branch for the manifest
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          path: manifest-branch
+
+      - name: Update manifest.json
+        env:
+          NOTES: ${{ steps.ver.outputs.notes }}
+        run: |
+          v='${{ steps.ver.outputs.version }}'
+          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.ver.outputs.tag }}/${{ steps.pkg.outputs.name }}"
+          python3 .github/scripts/update_manifest.py --manifest manifest-branch/manifest.json --build-yaml build.yaml \
+            --version "$v" --source-url "$url" --zip "${{ steps.pkg.outputs.zip }}" --changelog "$NOTES"
+          python3 .github/scripts/verify_manifest.py manifest-branch/manifest.json
+          cd manifest-branch
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          git commit -m "Update manifest.json for ${{ steps.ver.outputs.tag }}"
+          git push
+
+      - name: Verify the published manifest and zip checksum
+        run: |
+          sleep 20
+          curl -sSfL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{ github.event.repository.default_branch }}/manifest.json" -o published.json
+          python3 .github/scripts/verify_manifest.py published.json --download

@@ -23,6 +23,13 @@ jobs:
       - name: Jellyfin version consistency (csproj = tests = ApiCompat = build.yaml targetAbi)
         run: python3 .github/scripts/check_versions.py
 
+      - name: Release scripts work (manifest generation + verification on a throwaway copy)
+        run: |
+          echo test > t.zip
+          printf '[]' > m.json
+          python3 .github/scripts/update_manifest.py --manifest m.json --build-yaml build.yaml --version 9.9.9.9 --source-url https://example.invalid/x.zip --zip t.zip --changelog "ci check"
+          python3 .github/scripts/verify_manifest.py m.json
+
       - name: Build
         run: dotnet build Jellyfin.Plugin.AdminToolkit.sln -c Release
 

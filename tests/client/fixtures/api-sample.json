@@ -41,16 +41,16 @@
   "duplicates": {
     "scanned": true,
     "result": {
-      "scannedUtc": "2026-10-17T20:55:50.7094247Z",
+      "scannedUtc": "2026-10-17T21:00:07.319498Z",
       "durationSeconds": 0.1,
       "itemsScanned": 2,
       "groups": [
         {
-          "id": "366eb90f06a8b1af",
+          "id": "547ba79abc9b3260",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine",
           "year": 2013,
-          "posterItemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+          "posterItemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
           "seriesId": null,
           "signals": [
             "ProviderId"
@@ -62,7 +62,7 @@
           "copies": [
             {
               "item": {
-                "id": "b7ec380a-21dd-462f-b807-336822eee1e5",
+                "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
                 "name": "Brooklyn Nine-Nine",
                 "year": 2013,
                 "kind": "Series",
@@ -122,7 +122,7 @@
               "expectedEpisodes": 24,
               "expectedSource": "Jellyfin\u0027s missing-episode data",
               "coverage": {
-                "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+                "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
                 "episodeCount": 18,
                 "sharedWithAll": 18,
                 "onlyHere": 0,
@@ -131,7 +131,7 @@
               },
               "watches": [
                 {
-                  "userId": "b1ce7d51-5962-418c-8953-85d5c33c4dba",
+                  "userId": "8ad4b635-4866-4125-adbb-b3b70ea4f277",
                   "userName": "alex",
                   "playedCount": 1,
                   "favorite": false,
@@ -202,7 +202,7 @@
             },
             {
               "item": {
-                "id": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+                "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
                 "name": "Brooklyn Nine-Nine",
                 "year": 2013,
                 "kind": "Series",
@@ -262,7 +262,7 @@
               "expectedEpisodes": 24,
               "expectedSource": "all copies together",
               "coverage": {
-                "itemId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+                "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
                 "episodeCount": 24,
                 "sharedWithAll": 18,
                 "onlyHere": 6,
@@ -337,8 +337,8 @@
               "warnings": []
             }
           ],
-          "recommendedKeepId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
-          "keepId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+          "recommendedKeepId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "keepId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
           "overridden": false,
           "confidence": "High",
           "confidenceReason": "High: same provider id and the recommended copy leads by 110 points.",
@@ -364,12 +364,12 @@
     }
   },
   "plan": {
-    "groupId": "366eb90f06a8b1af",
+    "groupId": "547ba79abc9b3260",
     "title": "Brooklyn Nine-Nine (2013)",
-    "keepItemId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+    "keepItemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
     "steps": [
       {
-        "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+        "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
         "kind": "CopyUserData",
         "description": "Copy watch data (played, play count, favourite, resume position) to the kept copy where it has none: alex (1 item).",
         "paths": [],
@@ -382,7 +382,7 @@
         "resultDetail": null
       },
       {
-        "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+        "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
         "kind": "JellyfinDeleteFiles",
         "description": "Remove from Jellyfin and delete these files/folders from disk: /data-sample/media/8tb1/TV/Brooklyn Nine-Nine.",
         "paths": [
@@ -402,7 +402,7 @@
     "destructive": true,
     "needsTypedDelete": true,
     "warnings": [],
-    "token": "6af532b0dbd52ed4c23409fc9424af55",
+    "token": "20b5c29a6a4e00f7f99c8c1674b35ddb",
     "safeMode": true,
     "executed": false,
     "dryRun": true
@@ -410,12 +410,12 @@
   "health": {
     "scanned": true,
     "report": {
-      "scannedUtc": "2026-10-17T20:55:50.933307Z",
+      "scannedUtc": "2026-10-17T21:00:07.5471816Z",
       "durationSeconds": 0,
       "itemsScanned": 44,
       "libraryPaths": [
         {
-          "libraryId": "74e0b78c-7aea-4a8c-99b2-02e9f7b000b5",
+          "libraryId": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
           "library": "TV Shows",
           "path": "/data-sample/media/8tb1/TV",
           "drive": "8TB 1",
@@ -427,7 +427,7 @@
           "status": "OK (readable and writable by Jellyfin)."
         },
         {
-          "libraryId": "74e0b78c-7aea-4a8c-99b2-02e9f7b000b5",
+          "libraryId": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
           "library": "TV Shows",
           "path": "/data-sample/media/8tb2/TV",
           "drive": "8TB 2",
@@ -443,7 +443,7 @@
         {
           "category": "MissingImage",
           "severity": "Info",
-          "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
@@ -457,7 +457,7 @@
         {
           "category": "MissingImage",
           "severity": "Info",
-          "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
@@ -471,7 +471,7 @@
         {
           "category": "MissingImage",
           "severity": "Info",
-          "itemId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
@@ -485,7 +485,7 @@
         {
           "category": "MissingImage",
           "severity": "Info",
-          "itemId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
@@ -499,7 +499,7 @@
         {
           "category": "SubtitleAudit",
           "severity": "Info",
-          "itemId": "b7ec380a-21dd-462f-b807-336822eee1e5",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
@@ -512,7 +512,7 @@
         {
           "category": "SubtitleAudit",
           "severity": "Info",
-          "itemId": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
           "kind": "Series",
           "title": "Brooklyn Nine-Nine (2013)",
           "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
@@ -542,7 +542,7 @@
   "storage": {
     "scanned": true,
     "report": {
-      "scannedUtc": "2026-10-17T20:55:50.9558669Z",
+      "scannedUtc": "2026-10-17T21:00:07.5586591Z",
       "durationSeconds": 0,
       "libraries": [
         {
@@ -565,7 +565,7 @@
       ],
       "items": [
         {
-          "id": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+          "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
           "name": "Brooklyn Nine-Nine",
           "year": 2013,
           "kind": "Series",
@@ -578,10 +578,10 @@
           "lastPlayed": null,
           "lastPlayedBy": null,
           "playCount": 0,
-          "duplicateGroupId": "366eb90f06a8b1af"
+          "duplicateGroupId": "547ba79abc9b3260"
         },
         {
-          "id": "b7ec380a-21dd-462f-b807-336822eee1e5",
+          "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
           "name": "Brooklyn Nine-Nine",
           "year": 2013,
           "kind": "Series",
@@ -594,14 +594,14 @@
           "lastPlayed": "2025-03-01T00:00:00",
           "lastPlayedBy": "alex",
           "playCount": 1,
-          "duplicateGroupId": "366eb90f06a8b1af"
+          "duplicateGroupId": "547ba79abc9b3260"
         }
       ]
     },
     "notWatchedMonths": 12,
     "notWatched": [
       {
-        "id": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+        "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
         "name": "Brooklyn Nine-Nine",
         "year": 2013,
         "kind": "Series",
@@ -614,10 +614,10 @@
         "lastPlayed": null,
         "lastPlayedBy": null,
         "playCount": 0,
-        "duplicateGroupId": "366eb90f06a8b1af"
+        "duplicateGroupId": "547ba79abc9b3260"
       },
       {
-        "id": "b7ec380a-21dd-462f-b807-336822eee1e5",
+        "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
         "name": "Brooklyn Nine-Nine",
         "year": 2013,
         "kind": "Series",
@@ -630,7 +630,7 @@
         "lastPlayed": "2025-03-01T00:00:00",
         "lastPlayedBy": "alex",
         "playCount": 1,
-        "duplicateGroupId": "366eb90f06a8b1af"
+        "duplicateGroupId": "547ba79abc9b3260"
       }
     ],
     "scan": {
@@ -667,7 +667,7 @@
   ],
   "libraries": [
     {
-      "id": "74e0b78c-7aea-4a8c-99b2-02e9f7b000b5",
+      "id": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
       "name": "TV Shows",
       "collectionType": "tvshows",
       "locations": [
@@ -745,7 +745,7 @@
   },
   "activity": [
     {
-      "timeUtc": "2026-10-17T20:55:50.9616646Z",
+      "timeUtc": "2026-10-17T21:00:07.5592132Z",
       "user": "alex",
       "area": "Storage",
       "action": "Scan",
@@ -754,7 +754,7 @@
       "detail": "2 titles, 0.00 TB in 0s."
     },
     {
-      "timeUtc": "2026-10-17T20:55:50.9524248Z",
+      "timeUtc": "2026-10-17T21:00:07.5582687Z",
       "user": "alex",
       "area": "Health",
       "action": "Scan",
@@ -763,7 +763,7 @@
       "detail": "44 items, 6 findings in 0s."
     },
     {
-      "timeUtc": "2026-10-17T20:55:50.8767137Z",
+      "timeUtc": "2026-10-17T21:00:07.4724336Z",
       "user": "alex",
       "area": "Duplicates",
       "action": "Scan",
@@ -774,7 +774,7 @@
   ],
   "imageItem": {
     "item": {
-      "id": "21d89ddf-7dd6-4915-a190-4796ad0e0216",
+      "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
       "name": "Brooklyn Nine-Nine",
       "year": 2013,
       "kind": "Series",
