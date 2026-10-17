@@ -1,0 +1,20 @@
+# JPRM-compatible plugin metadata (https://github.com/oddstr13/jellyfin-plugin-repository-manager).
+# The release workflow reads guid/name/overview/description/owner/category/targetAbi from here.
+name: "Admin Toolkit"
+guid: "41dca3a8-262c-4dd5-b4b1-ee38bef2c31d"
+version: "1.0.0.0"
+targetAbi: "10.11.10.0"
+framework: "net9.0"
+overview: "Admin-only dashboard toolkit: duplicates, artwork, library health and storage."
+description: >
+  A Dashboard page for administrators with tabs for finding and resolving duplicate movies and shows (with a transparent
+  keep/remove score and Sonarr/Radarr-aware removal), editing artwork with Jellyfin's providers or web image search
+  (with real transparency detection), library health checks, storage insight per drive, and an activity log.
+  Read-only by default: safe mode is on for a new install and every destructive action needs a preview and confirmation.
+  No home-screen footprint and no changes to other plugins.
+category: "General"
+owner: "alexgirollet-blip"
+artifacts:
+  - "Jellyfin.Plugin.AdminToolkit.dll"
+changelog: >
+  1.0.0.0: first release for Jellyfin 10.11.10.

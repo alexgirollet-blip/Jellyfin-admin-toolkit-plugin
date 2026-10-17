@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.idea/
+artifacts/
+*.user
+TestResults/
+publish/
+*.zip
+node_modules/
