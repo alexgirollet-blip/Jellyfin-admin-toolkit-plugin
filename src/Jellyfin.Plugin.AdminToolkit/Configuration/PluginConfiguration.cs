@@ -127,6 +127,9 @@ public sealed class PluginConfiguration : BasePluginConfiguration
 
     public int NotWatchedMonths { get; set; } = 12;
 
+    /// <summary>Gets or sets the Docker container name used in the copy-ready commands shown when Jellyfin cannot delete files.</summary>
+    public string ContainerName { get; set; } = "jellyfin";
+
     /// <summary>Clamps values to safe ranges and removes empty rows. Returns true when something changed.</summary>
     public bool Normalize()
     {
@@ -172,6 +175,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
         ImageSearchApiKey = (ImageSearchApiKey ?? string.Empty).Trim();
         GoogleSearchEngineId = (GoogleSearchEngineId ?? string.Empty).Trim();
         PreferredDrive = (PreferredDrive ?? string.Empty).Trim();
+        ContainerName = string.IsNullOrWhiteSpace(ContainerName) ? "jellyfin" : ContainerName.Trim();
         AuditSubtitleLanguage = string.IsNullOrWhiteSpace(AuditSubtitleLanguage) ? "eng" : AuditSubtitleLanguage.Trim().ToLowerInvariant();
         AuditAudioLanguage = string.IsNullOrWhiteSpace(AuditAudioLanguage) ? "eng" : AuditAudioLanguage.Trim().ToLowerInvariant();
         return changed;
