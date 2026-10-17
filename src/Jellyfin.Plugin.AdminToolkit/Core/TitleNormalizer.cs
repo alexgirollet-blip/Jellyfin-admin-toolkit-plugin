@@ -44,6 +44,9 @@ public static partial class TitleNormalizer
             s = BracketYear().Replace(s, " ");
         }
 
+        // "Office, The (US)" -> "Office (US)".
+        s = CommaArticle().Replace(s, " ");
+
         // Remaining bracketed text is usually release info ("[1080p]", "(Remastered)"), except country tags like "(US)".
         s = Brackets().Replace(s, m => IsCountryTag(m.Groups[1].Value) ? " " + m.Groups[1].Value + " " : " ");
 
@@ -121,6 +124,9 @@ public static partial class TitleNormalizer
 
     [GeneratedRegex(@"\s+", RegexOptions.CultureInvariant)]
     private static partial Regex Spaces();
+
+    [GeneratedRegex(@",\s*(the|a|an)(?=\s*([\(\[\{]|$))", RegexOptions.CultureInvariant)]
+    private static partial Regex CommaArticle();
 
     [GeneratedRegex(@"^(the|a|an)\s+", RegexOptions.CultureInvariant)]
     private static partial Regex LeadingArticle();
