@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Compile-time and runtime Jellyfin versions must match exactly: Jellyfin removes public members between
+    patch releases (10.11.10 dropped IUserManager.Users). JellyfinPackageVersion must equal build.yaml targetAbi;
+    .github/scripts/check_versions.py enforces this and CI JIT-verifies the DLL against the real 10.11.10 assemblies.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <JellyfinPackageVersion>10.11.10</JellyfinPackageVersion>
+    <!-- SkiaSharp version shipped by the Jellyfin 10.11.10 server (Directory.Packages.props at tag v10.11.10). -->
+    <SkiaSharpVersion>3.116.1</SkiaSharpVersion>
+    <RootNamespace>Jellyfin.Plugin.AdminToolkit</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="$(JellyfinPackageVersion)">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Jellyfin.Model" Version="$(JellyfinPackageVersion)">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <!-- Compile against the server's SkiaSharp; never ship it (the server's copy is used at runtime). -->
+    <PackageReference Include="SkiaSharp" Version="$(SkiaSharpVersion)">
+      <ExcludeAssets>runtime;native</ExcludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Web\*" />
+    <EmbeddedResource Include="Web\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Jellyfin.Plugin.AdminToolkit.Tests" />
+  </ItemGroup>
+
+</Project>

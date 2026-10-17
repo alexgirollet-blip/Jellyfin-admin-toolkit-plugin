@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Binary compatibility check: loads a built Jellyfin.Plugin.AdminToolkit.dll together with the REAL
+    Jellyfin runtime assemblies of $(JellyfinVersion) and JIT-compiles every method. A member the plugin
+    calls that does not exist in that Jellyfin version throws MissingMethodException / MissingFieldException
+    / TypeLoadException here, exactly as it would on the server (this is how 1.0.0.0 broke on 10.11.10).
+
+    Usage: dotnet build -c Release -p:JellyfinVersion=10.11.10, then: dotnet bin/Release/net9.0/ApiCompat.dll path/to/Jellyfin.Plugin.AdminToolkit.dll
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <JellyfinVersion Condition="'$(JellyfinVersion)' == ''">10.11.10</JellyfinVersion>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="$(JellyfinVersion)" />
+    <PackageReference Include="Jellyfin.Model" Version="$(JellyfinVersion)" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

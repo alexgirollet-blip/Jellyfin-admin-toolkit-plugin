@@ -1,0 +1,842 @@
+{
+  "status": {
+    "pluginVersion": "1.0.0.0",
+    "builtForJellyfin": "10.11.10",
+    "serverAssemblies": "10.11.10.0",
+    "safeMode": true,
+    "dryRunDefault": true,
+    "confirmationLevel": "TypeDelete",
+    "processUser": "uid 1000, gid 1000",
+    "dataDirectory": "/config/data/admintoolkit",
+    "scans": [
+      {
+        "kind": "duplicates",
+        "running": false,
+        "progress": 0,
+        "startedUtc": null,
+        "finishedUtc": null,
+        "error": null,
+        "startedBy": null
+      },
+      {
+        "kind": "health",
+        "running": false,
+        "progress": 0,
+        "startedUtc": null,
+        "finishedUtc": null,
+        "error": null,
+        "startedBy": null
+      },
+      {
+        "kind": "storage",
+        "running": false,
+        "progress": 0,
+        "startedUtc": null,
+        "finishedUtc": null,
+        "error": null,
+        "startedBy": null
+      }
+    ]
+  },
+  "duplicates": {
+    "scanned": true,
+    "result": {
+      "scannedUtc": "2026-10-17T21:00:07.319498Z",
+      "durationSeconds": 0.1,
+      "itemsScanned": 2,
+      "groups": [
+        {
+          "id": "547ba79abc9b3260",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine",
+          "year": 2013,
+          "posterItemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+          "seriesId": null,
+          "signals": [
+            "ProviderId"
+          ],
+          "evidence": [
+            "Same Tvdb id 269586",
+            "Episode overlap: 18 episode(s) in every copy; 18 in copy on 8TB 1, 24 in copy on 8TB 2; expected 24."
+          ],
+          "copies": [
+            {
+              "item": {
+                "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+                "name": "Brooklyn Nine-Nine",
+                "year": 2013,
+                "kind": "Series",
+                "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+                "folderPath": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+                "libraryId": null,
+                "libraryName": "TV Shows",
+                "providerIds": {
+                  "Tvdb": "269586",
+                  "Imdb": "tt2467372"
+                },
+                "dateCreated": "2021-01-01T00:00:00",
+                "hasOverview": true,
+                "isLocked": false,
+                "isVirtual": false,
+                "imageCounts": {
+                  "Primary": 1
+                },
+                "filePaths": [],
+                "deletePaths": [
+                  "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine"
+                ],
+                "sizeBytes": null,
+                "width": 1920,
+                "height": 1080,
+                "videoCodec": "h264",
+                "bitDepth": null,
+                "videoRange": null,
+                "bitrate": null,
+                "container": null,
+                "audioLanguages": [
+                  "eng"
+                ],
+                "audioCodecs": [],
+                "subtitleLanguages": [],
+                "versionCount": 1,
+                "seriesId": null,
+                "seriesName": null,
+                "seasonNumber": null,
+                "episodeNumber": null,
+                "episodeNumberEnd": null,
+                "hasProviderIds": true
+              },
+              "drive": "8TB 1",
+              "driveFreeBytes": 2000000000000,
+              "driveTotalBytes": 8000000000000,
+              "pathExists": true,
+              "fileCount": 18,
+              "filesMissing": 0,
+              "totalSizeBytes": 18000,
+              "arrManaged": false,
+              "arrService": "Sonarr",
+              "arrPath": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+              "arrId": 12,
+              "arrProblem": null,
+              "episodeCount": 18,
+              "expectedEpisodes": 24,
+              "expectedSource": "Jellyfin\u0027s missing-episode data",
+              "coverage": {
+                "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+                "episodeCount": 18,
+                "sharedWithAll": 18,
+                "onlyHere": 0,
+                "missingHere": 6,
+                "onlyHereSample": []
+              },
+              "watches": [
+                {
+                  "userId": "8ad4b635-4866-4125-adbb-b3b70ea4f277",
+                  "userName": "alex",
+                  "playedCount": 1,
+                  "favorite": false,
+                  "hasResume": false,
+                  "lastPlayed": "2025-03-01T00:00:00"
+                }
+              ],
+              "sharesFilesWithAnotherCopy": false,
+              "score": 111,
+              "factors": [
+                {
+                  "name": "Managed path",
+                  "points": 0,
+                  "max": 100,
+                  "reason": "not the path Sonarr manages"
+                },
+                {
+                  "name": "Completeness",
+                  "points": 45,
+                  "max": 60,
+                  "reason": "has 18/24 episodes (other copy: 24/24)"
+                },
+                {
+                  "name": "On disk",
+                  "points": 30,
+                  "max": 30,
+                  "reason": "all 18 file(s) exist on disk"
+                },
+                {
+                  "name": "Quality",
+                  "points": 20,
+                  "max": 20,
+                  "reason": "same resolution as the other copies (1080p H264); file size is not used"
+                },
+                {
+                  "name": "Metadata",
+                  "points": 8,
+                  "max": 10,
+                  "reason": "metadata missing: backdrop [Imdb, Tvdb]"
+                },
+                {
+                  "name": "Watch history",
+                  "points": 5,
+                  "max": 5,
+                  "reason": "watched by alex (1 episode plays)"
+                },
+                {
+                  "name": "Date added",
+                  "points": 3,
+                  "max": 3,
+                  "reason": "added first (2021-01-01)"
+                }
+              ],
+              "decision": "Remove",
+              "recommended": false,
+              "reasons": [
+                "not the path Sonarr manages",
+                "has 18/24 episodes (other copy: 24/24)",
+                "all 18 file(s) exist on disk",
+                "same resolution as the other copies (1080p H264); file size is not used",
+                "metadata missing: backdrop [Imdb, Tvdb]",
+                "watched by alex (1 episode plays)",
+                "added first (2021-01-01)"
+              ],
+              "warnings": [
+                "Watch data on this copy (alex) is not on the kept copy; you can copy it before removing."
+              ]
+            },
+            {
+              "item": {
+                "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+                "name": "Brooklyn Nine-Nine",
+                "year": 2013,
+                "kind": "Series",
+                "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+                "folderPath": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+                "libraryId": null,
+                "libraryName": "TV Shows",
+                "providerIds": {
+                  "Tvdb": "269586",
+                  "Imdb": "tt2467372"
+                },
+                "dateCreated": "2021-01-01T00:00:00",
+                "hasOverview": true,
+                "isLocked": false,
+                "isVirtual": false,
+                "imageCounts": {
+                  "Primary": 1
+                },
+                "filePaths": [],
+                "deletePaths": [
+                  "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine"
+                ],
+                "sizeBytes": null,
+                "width": 1920,
+                "height": 1080,
+                "videoCodec": "h264",
+                "bitDepth": null,
+                "videoRange": null,
+                "bitrate": null,
+                "container": null,
+                "audioLanguages": [
+                  "eng"
+                ],
+                "audioCodecs": [],
+                "subtitleLanguages": [],
+                "versionCount": 1,
+                "seriesId": null,
+                "seriesName": null,
+                "seasonNumber": null,
+                "episodeNumber": null,
+                "episodeNumberEnd": null,
+                "hasProviderIds": true
+              },
+              "drive": "8TB 2",
+              "driveFreeBytes": 2000000000000,
+              "driveTotalBytes": 8000000000000,
+              "pathExists": true,
+              "fileCount": 24,
+              "filesMissing": 0,
+              "totalSizeBytes": 24000,
+              "arrManaged": true,
+              "arrService": "Sonarr",
+              "arrPath": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+              "arrId": 12,
+              "arrProblem": null,
+              "episodeCount": 24,
+              "expectedEpisodes": 24,
+              "expectedSource": "all copies together",
+              "coverage": {
+                "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+                "episodeCount": 24,
+                "sharedWithAll": 18,
+                "onlyHere": 6,
+                "missingHere": 0,
+                "onlyHereSample": [
+                  "S02E07",
+                  "S02E08",
+                  "S02E09",
+                  "S02E10",
+                  "S02E11",
+                  "S02E12"
+                ]
+              },
+              "watches": [],
+              "sharesFilesWithAnotherCopy": false,
+              "score": 221,
+              "factors": [
+                {
+                  "name": "Managed path",
+                  "points": 100,
+                  "max": 100,
+                  "reason": "path matches Sonarr\u0027s path (/data-sample/media/8tb2/TV/Brooklyn Nine-Nine)"
+                },
+                {
+                  "name": "Completeness",
+                  "points": 60,
+                  "max": 60,
+                  "reason": "has 24/24 episodes (other copy: 18/24); 6 only in this copy"
+                },
+                {
+                  "name": "On disk",
+                  "points": 30,
+                  "max": 30,
+                  "reason": "all 24 file(s) exist on disk"
+                },
+                {
+                  "name": "Quality",
+                  "points": 20,
+                  "max": 20,
+                  "reason": "same resolution as the other copies (1080p H264); file size is not used"
+                },
+                {
+                  "name": "Metadata",
+                  "points": 8,
+                  "max": 10,
+                  "reason": "metadata missing: backdrop [Imdb, Tvdb]"
+                },
+                {
+                  "name": "Watch history",
+                  "points": 0,
+                  "max": 5,
+                  "reason": "no watch data on this copy"
+                },
+                {
+                  "name": "Date added",
+                  "points": 3,
+                  "max": 3,
+                  "reason": "added first (2021-01-01)"
+                }
+              ],
+              "decision": "Keep",
+              "recommended": true,
+              "reasons": [
+                "path matches Sonarr\u0027s path (/data-sample/media/8tb2/TV/Brooklyn Nine-Nine)",
+                "has 24/24 episodes (other copy: 18/24); 6 only in this copy",
+                "all 24 file(s) exist on disk",
+                "same resolution as the other copies (1080p H264); file size is not used",
+                "metadata missing: backdrop [Imdb, Tvdb]",
+                "no watch data on this copy",
+                "added first (2021-01-01)"
+              ],
+              "warnings": []
+            }
+          ],
+          "recommendedKeepId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "keepId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "overridden": false,
+          "confidence": "High",
+          "confidenceReason": "High: same provider id and the recommended copy leads by 110 points.",
+          "autoSelect": true,
+          "notes": [
+            "Free space on the drive is NOT a factor."
+          ]
+        }
+      ],
+      "episodeGroups": [],
+      "mergedVersions": [],
+      "problems": []
+    },
+    "marked": {},
+    "scan": {
+      "kind": "duplicates",
+      "running": false,
+      "progress": 0,
+      "startedUtc": null,
+      "finishedUtc": null,
+      "error": null,
+      "startedBy": null
+    }
+  },
+  "plan": {
+    "groupId": "547ba79abc9b3260",
+    "title": "Brooklyn Nine-Nine (2013)",
+    "keepItemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+    "steps": [
+      {
+        "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+        "kind": "CopyUserData",
+        "description": "Copy watch data (played, play count, favourite, resume position) to the kept copy where it has none: alex (1 item).",
+        "paths": [],
+        "bytes": 0,
+        "possible": true,
+        "blocker": null,
+        "manualCommands": [],
+        "destructive": false,
+        "result": null,
+        "resultDetail": null
+      },
+      {
+        "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+        "kind": "JellyfinDeleteFiles",
+        "description": "Remove from Jellyfin and delete these files/folders from disk: /data-sample/media/8tb1/TV/Brooklyn Nine-Nine.",
+        "paths": [
+          "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine"
+        ],
+        "bytes": 18000,
+        "possible": true,
+        "blocker": null,
+        "manualCommands": [],
+        "destructive": true,
+        "result": null,
+        "resultDetail": null
+      }
+    ],
+    "bytesFreed": 18000,
+    "canExecute": true,
+    "destructive": true,
+    "needsTypedDelete": true,
+    "warnings": [],
+    "token": "20b5c29a6a4e00f7f99c8c1674b35ddb",
+    "safeMode": true,
+    "executed": false,
+    "dryRun": true
+  },
+  "health": {
+    "scanned": true,
+    "report": {
+      "scannedUtc": "2026-10-17T21:00:07.5471816Z",
+      "durationSeconds": 0,
+      "itemsScanned": 44,
+      "libraryPaths": [
+        {
+          "libraryId": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
+          "library": "TV Shows",
+          "path": "/data-sample/media/8tb1/TV",
+          "drive": "8TB 1",
+          "exists": true,
+          "readable": true,
+          "empty": false,
+          "writable": true,
+          "writeProblem": null,
+          "status": "OK (readable and writable by Jellyfin)."
+        },
+        {
+          "libraryId": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
+          "library": "TV Shows",
+          "path": "/data-sample/media/8tb2/TV",
+          "drive": "8TB 2",
+          "exists": true,
+          "readable": true,
+          "empty": false,
+          "writable": true,
+          "writeProblem": null,
+          "status": "OK (readable and writable by Jellyfin)."
+        }
+      ],
+      "issues": [
+        {
+          "category": "MissingImage",
+          "severity": "Info",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "No backdrop image.",
+          "actions": [
+            "images",
+            "refresh"
+          ]
+        },
+        {
+          "category": "MissingImage",
+          "severity": "Info",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "No logo image.",
+          "actions": [
+            "images",
+            "refresh"
+          ]
+        },
+        {
+          "category": "MissingImage",
+          "severity": "Info",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "No backdrop image.",
+          "actions": [
+            "images",
+            "refresh"
+          ]
+        },
+        {
+          "category": "MissingImage",
+          "severity": "Info",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "No logo image.",
+          "actions": [
+            "images",
+            "refresh"
+          ]
+        },
+        {
+          "category": "SubtitleAudit",
+          "severity": "Info",
+          "itemId": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "18 of 18 episode(s): no \u0022eng\u0022 subtitles.",
+          "actions": [
+            "open"
+          ]
+        },
+        {
+          "category": "SubtitleAudit",
+          "severity": "Info",
+          "itemId": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "kind": "Series",
+          "title": "Brooklyn Nine-Nine (2013)",
+          "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+          "library": "TV Shows",
+          "detail": "24 of 24 episode(s): no \u0022eng\u0022 subtitles.",
+          "actions": [
+            "open"
+          ]
+        }
+      ],
+      "counts": {
+        "MissingImage": 4,
+        "SubtitleAudit": 2
+      },
+      "processUser": "uid 0, gid 0"
+    },
+    "scan": {
+      "kind": "health",
+      "running": false,
+      "progress": 0,
+      "startedUtc": null,
+      "finishedUtc": null,
+      "error": null,
+      "startedBy": null
+    }
+  },
+  "storage": {
+    "scanned": true,
+    "report": {
+      "scannedUtc": "2026-10-17T21:00:07.5586591Z",
+      "durationSeconds": 0,
+      "libraries": [
+        {
+          "name": "TV Shows",
+          "bytes": 42000,
+          "items": 2
+        }
+      ],
+      "drivesBySize": [
+        {
+          "name": "8TB 2",
+          "bytes": 24000,
+          "items": 1
+        },
+        {
+          "name": "8TB 1",
+          "bytes": 18000,
+          "items": 1
+        }
+      ],
+      "items": [
+        {
+          "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+          "name": "Brooklyn Nine-Nine",
+          "year": 2013,
+          "kind": "Series",
+          "library": "TV Shows",
+          "drive": "8TB 2",
+          "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+          "bytes": 24000,
+          "episodes": 24,
+          "dateAdded": "2021-01-01T00:00:00",
+          "lastPlayed": null,
+          "lastPlayedBy": null,
+          "playCount": 0,
+          "duplicateGroupId": "547ba79abc9b3260"
+        },
+        {
+          "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+          "name": "Brooklyn Nine-Nine",
+          "year": 2013,
+          "kind": "Series",
+          "library": "TV Shows",
+          "drive": "8TB 1",
+          "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+          "bytes": 18000,
+          "episodes": 18,
+          "dateAdded": "2021-01-01T00:00:00",
+          "lastPlayed": "2025-03-01T00:00:00",
+          "lastPlayedBy": "alex",
+          "playCount": 1,
+          "duplicateGroupId": "547ba79abc9b3260"
+        }
+      ]
+    },
+    "notWatchedMonths": 12,
+    "notWatched": [
+      {
+        "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+        "name": "Brooklyn Nine-Nine",
+        "year": 2013,
+        "kind": "Series",
+        "library": "TV Shows",
+        "drive": "8TB 2",
+        "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+        "bytes": 24000,
+        "episodes": 24,
+        "dateAdded": "2021-01-01T00:00:00",
+        "lastPlayed": null,
+        "lastPlayedBy": null,
+        "playCount": 0,
+        "duplicateGroupId": "547ba79abc9b3260"
+      },
+      {
+        "id": "f9368b98-1740-4cb3-bb22-6185e72a7e3b",
+        "name": "Brooklyn Nine-Nine",
+        "year": 2013,
+        "kind": "Series",
+        "library": "TV Shows",
+        "drive": "8TB 1",
+        "path": "/data-sample/media/8tb1/TV/Brooklyn Nine-Nine",
+        "bytes": 18000,
+        "episodes": 18,
+        "dateAdded": "2021-01-01T00:00:00",
+        "lastPlayed": "2025-03-01T00:00:00",
+        "lastPlayedBy": "alex",
+        "playCount": 1,
+        "duplicateGroupId": "547ba79abc9b3260"
+      }
+    ],
+    "scan": {
+      "kind": "storage",
+      "running": false,
+      "progress": 0,
+      "startedUtc": null,
+      "finishedUtc": null,
+      "error": null,
+      "startedBy": null
+    }
+  },
+  "drives": [
+    {
+      "label": "8TB 1",
+      "prefix": "/data-sample/media/8tb1",
+      "configured": true,
+      "totalBytes": 8000000000000,
+      "freeBytes": 2000000000000,
+      "usedBytes": 6000000000000,
+      "exists": true,
+      "problem": null
+    },
+    {
+      "label": "8TB 2",
+      "prefix": "/data-sample/media/8tb2",
+      "configured": true,
+      "totalBytes": 8000000000000,
+      "freeBytes": 2000000000000,
+      "usedBytes": 6000000000000,
+      "exists": true,
+      "problem": null
+    }
+  ],
+  "libraries": [
+    {
+      "id": "7c0d6a24-5dec-45ce-9cb5-c745260f79df",
+      "name": "TV Shows",
+      "collectionType": "tvshows",
+      "locations": [
+        "/data-sample/media/8tb1/TV",
+        "/data-sample/media/8tb2/TV"
+      ]
+    }
+  ],
+  "settings": {
+    "settings": {
+      "safeMode": true,
+      "dryRunDefault": true,
+      "confirmationLevel": "TypeDelete",
+      "sonarrUrl": "http://sonarr:8989",
+      "sonarrApiKey": "\u2022\u2022\u2022\u20221234",
+      "radarrUrl": "",
+      "radarrApiKey": "",
+      "jellyseerrUrl": "",
+      "jellyseerrApiKey": "",
+      "arrPathMappings": [
+        {
+          "arrPrefix": "/tv",
+          "jellyfinPrefix": "/data-sample/media/8tb2/TV"
+        }
+      ],
+      "imageSearchProvider": "None",
+      "imageSearchApiKey": "",
+      "googleSearchEngineId": "",
+      "driveMappings": [
+        {
+          "prefix": "/data-sample/media/8tb1",
+          "label": "8TB 1"
+        },
+        {
+          "prefix": "/data-sample/media/8tb2",
+          "label": "8TB 2"
+        }
+      ],
+      "preferredDrive": "",
+      "weights": {
+        "managedPath": 100,
+        "completeness": 60,
+        "onDisk": 30,
+        "quality": 20,
+        "metadata": 10,
+        "watchHistory": 5,
+        "dateAdded": 3,
+        "preferredDrive": 5,
+        "preferOlder": true,
+        "highConfidenceGap": 30,
+        "mediumConfidenceGap": 10
+      },
+      "scanEpisodeDuplicates": false,
+      "scheduledScansEnabled": false,
+      "activityRetentionDays": 180,
+      "auditSubtitleLanguage": "eng",
+      "auditAudioLanguage": "eng",
+      "highBitrateMbps": 60,
+      "notWatchedMonths": 12,
+      "containerName": "jellyfin"
+    },
+    "defaults": {
+      "managedPath": 100,
+      "completeness": 60,
+      "onDisk": 30,
+      "quality": 20,
+      "metadata": 10,
+      "watchHistory": 5,
+      "dateAdded": 3,
+      "preferredDrive": 5,
+      "preferOlder": true,
+      "highConfidenceGap": 30,
+      "mediumConfidenceGap": 10
+    }
+  },
+  "activity": [
+    {
+      "timeUtc": "2026-10-17T21:00:07.5592132Z",
+      "user": "alex",
+      "area": "Storage",
+      "action": "Scan",
+      "target": "Library",
+      "result": "OK",
+      "detail": "2 titles, 0.00 TB in 0s."
+    },
+    {
+      "timeUtc": "2026-10-17T21:00:07.5582687Z",
+      "user": "alex",
+      "area": "Health",
+      "action": "Scan",
+      "target": "Library",
+      "result": "OK",
+      "detail": "44 items, 6 findings in 0s."
+    },
+    {
+      "timeUtc": "2026-10-17T21:00:07.4724336Z",
+      "user": "alex",
+      "area": "Duplicates",
+      "action": "Scan",
+      "target": "Library",
+      "result": "OK",
+      "detail": "2 items, 1 duplicate groups, 0 episode duplicates, 0 merged multi-version movies in 0.1s."
+    }
+  ],
+  "imageItem": {
+    "item": {
+      "id": "a964bb1d-8737-4e3c-893a-db575cb7695a",
+      "name": "Brooklyn Nine-Nine",
+      "year": 2013,
+      "kind": "Series",
+      "seriesName": null,
+      "libraryName": "TV Shows",
+      "imageCounts": {}
+    },
+    "path": "/data-sample/media/8tb2/TV/Brooklyn Nine-Nine",
+    "locked": false,
+    "images": [
+      {
+        "type": "Primary",
+        "index": 0,
+        "width": 1000,
+        "height": 1500,
+        "path": "/config/metadata/poster.jpg",
+        "fileSize": 345678,
+        "isLocal": true
+      },
+      {
+        "type": "Backdrop",
+        "index": 0,
+        "width": 1920,
+        "height": 1080,
+        "path": null,
+        "fileSize": null,
+        "isLocal": false
+      },
+      {
+        "type": "Backdrop",
+        "index": 1,
+        "width": 3840,
+        "height": 2160,
+        "path": null,
+        "fileSize": null,
+        "isLocal": false
+      }
+    ],
+    "remoteProviders": [
+      "TheMovieDb",
+      "Fanart",
+      "TheTVDB"
+    ],
+    "remoteProvidersError": null,
+    "types": [
+      "Primary",
+      "Backdrop",
+      "Logo",
+      "Thumb",
+      "Banner",
+      "Art",
+      "Disc"
+    ],
+    "defaultQueries": {
+      "Primary": "Brooklyn Nine-Nine 2013 poster",
+      "Backdrop": "Brooklyn Nine-Nine 2013 backdrop wallpaper",
+      "Logo": "Brooklyn Nine-Nine 2013 logo transparent png",
+      "Thumb": "Brooklyn Nine-Nine 2013 thumbnail",
+      "Banner": "Brooklyn Nine-Nine 2013 banner",
+      "Art": "Brooklyn Nine-Nine 2013 clearart transparent png",
+      "Disc": "Brooklyn Nine-Nine 2013 disc art transparent png"
+    },
+    "webSearchConfigured": false
+  }
+}

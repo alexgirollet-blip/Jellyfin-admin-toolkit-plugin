@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Admin Toolkit</title>
+</head>
+<body>
+<div id="AdminToolkitPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox">
+    <style>
+        #AdminToolkitPage .at-wrap { max-width: 96em; margin: 0 auto; padding: 0 .2em 3em; }
+        #AdminToolkitPage h2 { margin: .2em 0 .4em; }
+        #AdminToolkitPage h3 { margin: .2em 0 .5em; font-size: 1.1em; }
+        #AdminToolkitPage h4 { margin: .6em 0 .3em; font-size: 1em; }
+        #AdminToolkitPage .at-status { display: flex; flex-wrap: wrap; gap: .4em .8em; align-items: center; font-size: .9em; margin: 0 0 .8em; }
+        #AdminToolkitPage .at-tabs { display: flex; flex-wrap: wrap; gap: .3em; margin: 0 0 1em; border-bottom: 1px solid rgba(128,128,128,.35); padding-bottom: .4em; }
+        #AdminToolkitPage .at-tabs button { min-height: 40px; padding: .4em .9em; border-radius: .4em; border: 1px solid rgba(128,128,128,.35); background: rgba(128,128,128,.08); color: inherit; cursor: pointer; font: inherit; }
+        #AdminToolkitPage .at-tabs button[aria-selected="true"] { background: rgba(0,164,220,.25); border-color: rgba(0,164,220,.8); font-weight: 600; }
+        #AdminToolkitPage .at-card { border: 1px solid rgba(128,128,128,.35); border-radius: .6em; padding: .8em 1em; margin: 0 0 1em; background: rgba(128,128,128,.07); min-width: 0; }
+        #AdminToolkitPage .at-row { display: flex; flex-wrap: wrap; gap: .5em; align-items: center; margin: .4em 0; }
+        #AdminToolkitPage .at-row > * { margin: 0; }
+        #AdminToolkitPage .at-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19em), 1fr)); gap: .8em; }
+        #AdminToolkitPage .at-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20em), 1fr)); gap: .2em 1.5em; }
+        #AdminToolkitPage .at-field { display: flex; flex-direction: column; gap: .25em; margin: .45em 0; }
+        #AdminToolkitPage .at-field > span { font-size: .9em; opacity: .85; }
+        #AdminToolkitPage input[type=text], #AdminToolkitPage input[type=number], #AdminToolkitPage input[type=password], #AdminToolkitPage input[type=url], #AdminToolkitPage input[type=search], #AdminToolkitPage select, #AdminToolkitPage textarea {
+            font: inherit; color: inherit; background: rgba(128,128,128,.12); border: 1px solid rgba(128,128,128,.45); border-radius: .35em; padding: .45em .6em; min-height: 38px; box-sizing: border-box; max-width: 100%; }
+        #AdminToolkitPage select option { color: #111; background: #fff; }
+        #AdminToolkitPage label.at-check { display: flex; gap: .5em; align-items: flex-start; min-height: 34px; cursor: pointer; }
+        #AdminToolkitPage label.at-check input { width: 1.2em; height: 1.2em; margin-top: .15em; flex: none; }
+        #AdminToolkitPage .at-btn { font: inherit; color: inherit; min-height: 38px; padding: .35em .9em; border-radius: .35em; border: 1px solid rgba(128,128,128,.5); background: rgba(128,128,128,.15); cursor: pointer; }
+        #AdminToolkitPage .at-btn:hover { background: rgba(128,128,128,.28); }
+        #AdminToolkitPage .at-btn[disabled] { opacity: .45; cursor: not-allowed; }
+        #AdminToolkitPage .at-btn.at-primary { background: rgba(0,164,220,.85); border-color: rgba(0,164,220,1); color: #fff; }
+        #AdminToolkitPage .at-btn.at-danger { background: rgba(204,51,51,.85); border-color: rgba(204,51,51,1); color: #fff; }
+        #AdminToolkitPage .at-btn.at-small { min-height: 30px; padding: .15em .6em; font-size: .9em; }
+        #AdminToolkitPage .at-muted { opacity: .72; font-size: .9em; }
+        #AdminToolkitPage .at-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; word-break: break-all; }
+        #AdminToolkitPage .at-badge { display: inline-block; padding: .1em .5em; border-radius: 1em; font-size: .8em; font-weight: 600; border: 1px solid currentColor; white-space: nowrap; }
+        #AdminToolkitPage .at-b-keep { background: rgba(46,160,67,.25); }
+        #AdminToolkitPage .at-b-remove { background: rgba(204,51,51,.22); }
+        #AdminToolkitPage .at-b-high { background: rgba(46,160,67,.25); }
+        #AdminToolkitPage .at-b-medium { background: rgba(230,160,20,.25); }
+        #AdminToolkitPage .at-b-low { background: rgba(204,51,51,.22); }
+        #AdminToolkitPage .at-b-info { background: rgba(0,164,220,.18); }
+        #AdminToolkitPage .at-b-safe { background: rgba(46,160,67,.3); }
+        #AdminToolkitPage .at-b-live { background: rgba(204,51,51,.3); }
+        #AdminToolkitPage .at-warn { border-left: .3em solid rgba(230,160,20,.9); padding: .45em .8em; background: rgba(230,160,20,.12); margin: .4em 0; border-radius: .2em; }
+        #AdminToolkitPage .at-ok { border-left: .3em solid rgba(46,160,67,.9); padding: .45em .8em; background: rgba(46,160,67,.12); margin: .4em 0; border-radius: .2em; }
+        #AdminToolkitPage .at-error { border-left: .3em solid rgba(204,51,51,.95); padding: .6em .9em; background: rgba(204,51,51,.12); margin: .4em 0; border-radius: .2em; }
+        #AdminToolkitPage .at-error .at-mono { display: block; margin-top: .2em; }
+        #AdminToolkitPage .at-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        #AdminToolkitPage table.at-table { border-collapse: collapse; width: 100%; font-size: .9em; }
+        #AdminToolkitPage .at-table th, #AdminToolkitPage .at-table td { text-align: left; padding: .4em .5em; border-bottom: 1px solid rgba(128,128,128,.25); vertical-align: top; }
+        #AdminToolkitPage .at-table th { cursor: default; white-space: nowrap; }
+        #AdminToolkitPage .at-table th[data-sort] { cursor: pointer; text-decoration: underline dotted; }
+        #AdminToolkitPage .at-copies { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22em), 1fr)); gap: .7em; margin-top: .6em; }
+        #AdminToolkitPage .at-copy { border: 2px solid rgba(128,128,128,.35); border-radius: .5em; padding: .6em .8em; min-width: 0; }
+        #AdminToolkitPage .at-copy.keep { border-color: rgba(46,160,67,.8); }
+        #AdminToolkitPage .at-copy.remove { border-color: rgba(204,51,51,.6); }
+        #AdminToolkitPage .at-kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .15em .7em; font-size: .88em; margin: .4em 0; }
+        #AdminToolkitPage .at-kv > :nth-child(odd) { opacity: .7; }
+        #AdminToolkitPage ul.at-list { margin: .3em 0; padding-left: 1.2em; }
+        #AdminToolkitPage ul.at-list li { margin: .12em 0; }
+        #AdminToolkitPage .at-group-head { display: flex; gap: .8em; align-items: flex-start; }
+        #AdminToolkitPage .at-poster { width: 70px; height: 105px; object-fit: cover; border-radius: .3em; background: rgba(128,128,128,.2); flex: none; }
+        #AdminToolkitPage .at-bar { height: .7em; border-radius: .35em; background: rgba(128,128,128,.25); overflow: hidden; margin: .3em 0; }
+        #AdminToolkitPage .at-bar > div { height: 100%; background: rgba(0,164,220,.85); }
+        #AdminToolkitPage .at-bar.at-full > div { background: rgba(204,51,51,.85); }
+        #AdminToolkitPage .at-imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11em), 1fr)); gap: .6em; }
+        #AdminToolkitPage .at-imgcard { border: 1px solid rgba(128,128,128,.35); border-radius: .4em; padding: .4em; display: flex; flex-direction: column; gap: .3em; min-width: 0; font-size: .85em; }
+        #AdminToolkitPage .at-imgbox { height: 9em; display: flex; align-items: center; justify-content: center; border-radius: .3em; overflow: hidden; }
+        #AdminToolkitPage .at-imgbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        #AdminToolkitPage .bg-dark .at-imgbox, #AdminToolkitPage .at-imgbox.bg-dark { background: #101010; }
+        #AdminToolkitPage .bg-light .at-imgbox, #AdminToolkitPage .at-imgbox.bg-light { background: #f4f4f4; }
+        #AdminToolkitPage .bg-check .at-imgbox, #AdminToolkitPage .at-imgbox.bg-check { background-color: #fff; background-image: linear-gradient(45deg, #c8c8c8 25%, transparent 25%), linear-gradient(-45deg, #c8c8c8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #c8c8c8 75%), linear-gradient(-45deg, transparent 75%, #c8c8c8 75%); background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0; }
+        #AdminToolkitPage .at-split { display: grid; grid-template-columns: minmax(0, 20em) minmax(0, 1fr); gap: 1em; }
+        #AdminToolkitPage .at-pick { max-height: 32em; overflow-y: auto; border: 1px solid rgba(128,128,128,.3); border-radius: .4em; }
+        #AdminToolkitPage .at-pick button { display: block; width: 100%; text-align: left; padding: .45em .6em; background: none; border: 0; border-bottom: 1px solid rgba(128,128,128,.2); color: inherit; font: inherit; cursor: pointer; min-height: 40px; }
+        #AdminToolkitPage .at-pick button:hover, #AdminToolkitPage .at-pick button[aria-current="true"] { background: rgba(0,164,220,.18); }
+        #AdminToolkitPage dialog.at-dialog { color: inherit; background: var(--at-dialog-bg, #202020); border: 1px solid rgba(128,128,128,.5); border-radius: .6em; padding: 1em 1.2em; width: min(56em, calc(100vw - 2em)); max-height: calc(100vh - 2em); overflow-y: auto; box-sizing: border-box; }
+        #AdminToolkitPage dialog.at-dialog::backdrop { background: rgba(0,0,0,.55); }
+        #AdminToolkitPage .at-progress { display: inline-block; min-width: 8em; }
+        #AdminToolkitPage .at-pager { display: flex; gap: .4em; align-items: center; flex-wrap: wrap; margin: .6em 0; }
+        #AdminToolkitPage details > summary { cursor: pointer; padding: .2em 0; }
+        #AdminToolkitPage .at-cmd { display: flex; gap: .4em; align-items: flex-start; margin: .3em 0; }
+        #AdminToolkitPage .at-cmd code { flex: 1; background: rgba(128,128,128,.18); padding: .35em .5em; border-radius: .3em; }
+        #AdminToolkitPage a { color: rgb(0,164,220); }
+        #AdminToolkitPage .at-hidden { display: none !important; }
+        @media (max-width: 760px) {
+            #AdminToolkitPage .at-split { grid-template-columns: minmax(0, 1fr); }
+            #AdminToolkitPage .at-pick { max-height: 16em; }
+            #AdminToolkitPage .at-tabs button { flex: 1 1 30%; padding: .4em .4em; }
+            #AdminToolkitPage .at-card { padding: .6em .6em; }
+        }
+    </style>
+    <div data-role="content">
+        <div class="content-primary at-wrap">
+            <h2>Admin Toolkit</h2>
+            <div class="at-status" id="atStatus"><span class="at-muted">Loading status...</span></div>
+            <div class="at-tabs" role="tablist" id="atTabs">
+                <button type="button" role="tab" data-tab="duplicates" aria-selected="true">Duplicates</button>
+                <button type="button" role="tab" data-tab="images" aria-selected="false">Images</button>
+                <button type="button" role="tab" data-tab="health" aria-selected="false">Library Health</button>
+                <button type="button" role="tab" data-tab="storage" aria-selected="false">Storage</button>
+                <button type="button" role="tab" data-tab="activity" aria-selected="false">Activity Log</button>
+                <button type="button" role="tab" data-tab="settings" aria-selected="false">Settings</button>
+            </div>
+            <div data-panel="duplicates" role="tabpanel"></div>
+            <div data-panel="images" role="tabpanel" class="at-hidden"></div>
+            <div data-panel="health" role="tabpanel" class="at-hidden"></div>
+            <div data-panel="storage" role="tabpanel" class="at-hidden"></div>
+            <div data-panel="activity" role="tabpanel" class="at-hidden"></div>
+            <div data-panel="settings" role="tabpanel" class="at-hidden"></div>
+            <dialog class="at-dialog" id="atDialog"></dialog>
+        </div>
+    </div>
+    <script type="text/javascript">
+    (function () {
+        'use strict';
+        var page = document.querySelector('#AdminToolkitPage');
+        if (!page || page.getAttribute('data-at-init')) { return; }
+        page.setAttribute('data-at-init', '1');
+
+        var state = { status: null, tab: 'duplicates', loaded: {}, errors: [], dup: { page: 0, filter: '', kind: '', conf: '' }, img: { itemId: null, list: [], listIndex: -1, results: [], analysis: {}, bg: 'bg-check', type: 'Primary', blobs: [] }, health: { page: 0, cat: '', sev: '', text: '', selected: {} }, storage: { sort: 'bytes', dir: -1, kind: '', drive: '' }, settings: null, polling: {} };
+        var PAGE_SIZE = 25;
+
+        // ---------- helpers ----------
+        function h(tag, props) {
+            var el = document.createElement(tag);
+            props = props || {};
+            Object.keys(props).forEach(function (k) {
+                var v = props[k];
+                if (v === undefined || v === null || v === false) { return; }
+                if (k === 'text') { el.textContent = v; }
+                else if (k === 'className') { el.className = v; }
+                else if (k === 'onclick' || k === 'onchange' || k === 'oninput' || k === 'onkeydown') { el.addEventListener(k.slice(2), v); }
+                else if (k === 'style') { el.setAttribute('style', v); }
+                else if (k in el && typeof v !== 'string') { el[k] = v; }
+                else { el.setAttribute(k, v === true ? '' : String(v)); }
+            });
+            for (var i = 2; i < arguments.length; i++) { append(el, arguments[i]); }
+            return el;
+        }
+        function append(el, c) {
+            if (c === null || c === undefined || c === false) { return; }
+            if (Array.isArray(c)) { c.forEach(function (x) { append(el, x); }); return; }
+            el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
+        }
+        function clear(el) { while (el.firstChild) { el.removeChild(el.firstChild); } return el; }
+        function btn(text, onclick, cls, extra) { var p = Object.assign({ type: 'button', className: 'at-btn ' + (cls || ''), text: text, onclick: onclick }, extra || {}); return h('button', p); }
+        function badge(text, cls) { return h('span', { className: 'at-badge ' + (cls || 'at-b-info'), text: text }); }
+        function fmtBytes(b) {
+            if (b === null || b === undefined || isNaN(b)) { return '?'; }
+            var u = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'], i = 0, n = Number(b);
+            while (n >= 1000 && i < u.length - 1) { n /= 1000; i++; }
+            return (i === 0 ? n : n.toFixed(n >= 100 ? 0 : n >= 10 ? 1 : 2)) + ' ' + u[i];
+        }
+        function fmtDate(s, withTime) {
+            if (!s) { return '-'; }
+            var d = new Date(s);
+            if (isNaN(d.getTime()) || d.getFullYear() < 1900) { return '-'; }
+            return withTime ? d.toLocaleString() : d.toLocaleDateString();
+        }
+        function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+        function safeStore(k, v) { try { if (v === undefined) { return localStorage.getItem(k); } localStorage.setItem(k, v); } catch (e) { return null; } return null; }
+        function serverId() { try { return ApiClient.serverId(); } catch (e) { return ''; } }
+        function detailsLink(id) { return '#/details?id=' + encodeURIComponent(id) + '&serverId=' + encodeURIComponent(serverId()); }
+        function posterUrl(id, w) { return ApiClient.getUrl('Items/' + id + '/Images/Primary', { maxWidth: w || 140, quality: 80 }); }
+
+        function ApiError(status, endpoint, message, code, body) {
+            this.status = status; this.endpoint = endpoint; this.message = message; this.code = code; this.body = body;
+        }
+        ApiError.prototype = Object.create(Error.prototype);
+
+        function headers(json) {
+            var hd = { 'Authorization': 'MediaBrowser Token="' + ApiClient.accessToken() + '"', 'Accept': json ? 'application/json' : '*/*' };
+            if (json) { hd['Content-Type'] = 'application/json'; }
+            return hd;
+        }
+        function api(method, path, body, raw) {
+            var endpoint = method + ' /AdminToolkit/' + path;
+            var url = ApiClient.getUrl('AdminToolkit/' + path);
+            return fetch(url, { method: method, headers: headers(!raw), body: body === undefined ? undefined : JSON.stringify(body), cache: 'no-store' })
+                .catch(function (e) { throw new ApiError(0, endpoint, 'Network error: ' + (e && e.message ? e.message : e) + ' (is the server reachable?)', 'network'); })
+                .then(function (res) {
+                    if (raw && res.ok) { return res; }
+                    return res.text().then(function (text) {
+                        var data = null;
+                        try { data = text ? JSON.parse(text) : null; } catch (e) { data = null; }
+                        if (!res.ok) {
+                            var msg = data && data.message ? data.message : (text ? text.slice(0, 300) : res.statusText || 'No details returned');
+                            if (res.status === 401 || res.status === 403) { if (!(data && data.message)) { msg = 'Not allowed (HTTP ' + res.status + '). Admin Toolkit needs an administrator account; sign in again if your session expired.'; } }
+                            if (res.status === 404 && !data) { msg = 'Endpoint not found (HTTP 404). Is the Admin Toolkit plugin installed and Jellyfin restarted?'; }
+                            var err = new ApiError(res.status, (data && data.endpoint) || endpoint, msg, data && data.error, text);
+                            remember(err);
+                            throw err;
+                        }
+                        return data;
+                    });
+                });
+        }
+        function remember(err) {
+            state.errors.unshift({ time: new Date().toISOString(), status: err.status, endpoint: err.endpoint, code: err.code, message: err.message });
+            state.errors = state.errors.slice(0, 20);
+        }
+        function diagnostics(err) {
+            var s = state.status || {};
+            return JSON.stringify({ plugin: 'Admin Toolkit', pluginVersion: s.pluginVersion, builtForJellyfin: s.builtForJellyfin, serverAssemblies: s.serverAssemblies,
+                safeMode: s.safeMode, time: new Date().toISOString(), page: location.href.replace(/api_key=[^&]+/, 'api_key=***'), userAgent: navigator.userAgent,
+                error: err ? { status: err.status, endpoint: err.endpoint, code: err.code, message: err.message } : null, recentErrors: state.errors }, null, 2);
+        }
+        function copyText(text, button) {
+            function done(ok) { if (button) { var o = button.textContent; button.textContent = ok ? 'Copied' : 'Copy failed: select and copy manually'; setTimeout(function () { button.textContent = o; }, 2000); } }
+            if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(); }); }
+            else { fallback(); }
+            function fallback() {
+                var ta = h('textarea', { style: 'position:fixed;left:-9999px;top:0' }); ta.value = text; document.body.appendChild(ta); ta.select();
+                var ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+                document.body.removeChild(ta); done(ok);
+            }
+        }
+        function errorBox(err, retry) {
+            var e = err instanceof ApiError ? err : new ApiError(0, '(page script)', String(err && err.message ? err.message : err), 'script');
+            if (!(err instanceof ApiError)) { remember(e); }
+            var copyBtn = btn('Copy diagnostics', function () { copyText(diagnostics(e), copyBtn); }, 'at-small');
+            return h('div', { className: 'at-error', role: 'alert' },
+                h('strong', { text: e.message }),
+                h('span', { className: 'at-mono', text: (e.status ? 'HTTP ' + e.status + ' ' : '') + e.endpoint + (e.code ? ' (' + e.code + ')' : '') }),
+                h('div', { className: 'at-row' }, retry ? btn('Retry', retry, 'at-small') : null, copyBtn));
+        }
+        // Loads one section independently: a failure shows its own error and never blanks other sections.
+        function section(container, title, loader) {
+            var body = h('div', {}, h('span', { className: 'at-muted', text: 'Loading...' }));
+            var card = h('div', { className: 'at-card' }, title ? h('h3', { text: title }) : null, body);
+            container.appendChild(card);
+            function run() {
+                clear(body).appendChild(h('span', { className: 'at-muted', text: 'Loading...' }));
+                return Promise.resolve().then(function () { return loader(body); }).then(function (r) { return r; }, function (err) { clear(body).appendChild(errorBox(err, run)); throw err; });
+            }
+            return run();
+        }
+        function loadAll(tasks) { return Promise.allSettled(tasks); }
+        function downloadFile(path, fallbackName) {
+            return api('GET', path, undefined, true).then(function (res) {
+                var cd = res.headers.get('Content-Disposition') || '';
+                var m = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(cd);
+                return res.blob().then(function (blob) {
+                    var a = h('a', { href: URL.createObjectURL(blob), download: m ? decodeURIComponent(m[1]) : fallbackName });
+                    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+                });
+            });
+        }
+        function safeMode() { return !state.status || state.status.safeMode !== false; }
+        function safeNote() { return safeMode() ? h('div', { className: 'at-ok', text: 'Safe mode is on: you can scan, view, preview and export, and every change is refused. Turn it off in Settings to make changes.' }) : null; }
+
+        // ---------- dialog ----------
+        var dialog = page.querySelector('#atDialog');
+        function openDialog(title, content, buttons) {
+            clear(dialog);
+            try { var bg = getComputedStyle(document.body).backgroundColor; if (bg && bg !== 'rgba(0, 0, 0, 0)') { dialog.style.setProperty('--at-dialog-bg', bg); } } catch (e) { /* default colour */ }
+            dialog.appendChild(h('h3', { text: title }));
+            append(dialog, content);
+            var row = h('div', { className: 'at-row', style: 'justify-content:flex-end;margin-top:1em' });
+            (buttons || []).forEach(function (b) { row.appendChild(b); });
+            row.appendChild(btn('Close', closeDialog));
+            dialog.appendChild(row);
+            if (typeof dialog.showModal === 'function') { if (!dialog.open) { dialog.showModal(); } } else { dialog.setAttribute('open', ''); }
+        }
+        function closeDialog() { if (typeof dialog.close === 'function' && dialog.open) { dialog.close(); } else { dialog.removeAttribute('open'); } }
+
+        // ---------- status bar ----------
+        function loadStatus() {
+            var el = page.querySelector('#atStatus');
+            return api('GET', 'Status').then(function (s) {
+                state.status = s;
+                clear(el);
+                el.appendChild(badge(s.safeMode ? 'Safe mode ON (view only)' : 'Safe mode OFF (changes allowed)', s.safeMode ? 'at-b-safe' : 'at-b-live'));
+                el.appendChild(badge(s.dryRunDefault ? 'Dry run by default' : 'Dry run off by default', 'at-b-info'));
+                el.appendChild(h('span', { className: 'at-muted', text: 'v' + s.pluginVersion + ' for Jellyfin ' + s.builtForJellyfin + ' (server assemblies ' + s.serverAssemblies + ') \u00b7 runs as ' + s.processUser }));
+                if (s.serverAssemblies && s.serverAssemblies.indexOf(s.builtForJellyfin) !== 0) {
+                    el.appendChild(h('div', { className: 'at-warn', text: 'This build was made for Jellyfin ' + s.builtForJellyfin + ' but the server reports ' + s.serverAssemblies + '. Some features may fail; install the matching Admin Toolkit release.' }));
+                }
+                return s;
+            }, function (err) { clear(el).appendChild(errorBox(err, loadStatus)); throw err; });
+        }
+
+        // ---------- scans ----------
+        function scanButton(kind, scanState, label, onDone) {
+            var wrap = h('span', { className: 'at-row' });
+            function render(st) {
+                clear(wrap);
+                if (st && st.running) {
+                    wrap.appendChild(h('span', { className: 'at-progress' }, h('div', { className: 'at-bar' }, h('div', { style: 'width:' + (st.progress || 0) + '%' })), h('span', { className: 'at-muted', text: label + ' running: ' + (st.progress || 0) + '%' })));
+                    wrap.appendChild(btn('Cancel', function () { api('POST', 'Scans/' + kind + '/Cancel', {}); }, 'at-small'));
+                } else {
+                    wrap.appendChild(btn(label, function () {
+                        api('POST', kind.charAt(0).toUpperCase() + kind.slice(1) + '/Scan', {}).then(function (st2) { render(st2); poll(); }, function (err) { wrap.appendChild(errorBox(err)); });
+                    }, 'at-primary'));
+                    if (st && st.error) { wrap.appendChild(h('span', { className: 'at-error', text: 'Last scan failed: ' + st.error })); }
+                }
+            }
+            function poll() {
+                if (state.polling[kind]) { return; }
+                state.polling[kind] = setInterval(function () {
+                    api('GET', 'Scans').then(function (all) {
+                        var st = all.filter(function (x) { return x.kind === kind; })[0];
+                        render(st);
+                        if (st && !st.running) { clearInterval(state.polling[kind]); state.polling[kind] = null; if (!st.error) { onDone(); } }
+                    }, function () { clearInterval(state.polling[kind]); state.polling[kind] = null; });
+                }, 1500);
+            }
+            render(scanState);
+            if (scanState && scanState.running) { poll(); }
+            return wrap;
+        }
+
+        // ---------- tabs ----------
+        var loaders = {};
+        function showTab(name, force) {
+            state.tab = name;
+            safeStore('adminToolkit.tab', name);
+            page.querySelectorAll('#atTabs button').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false'); });
+            page.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('at-hidden', p.getAttribute('data-panel') !== name); });
+            if (force || !state.loaded[name]) {
+                state.loaded[name] = true;
+                var panel = clear(page.querySelector('[data-panel="' + name + '"]'));
+                try { loaders[name](panel); } catch (e) { panel.appendChild(errorBox(e, function () { showTab(name, true); })); }
+            }
+        }
+        page.querySelector('#atTabs').addEventListener('click', function (e) { var b = e.target.closest('button[data-tab]'); if (b) { showTab(b.getAttribute('data-tab')); } });
+
+        // ===================== DUPLICATES =====================
+        loaders.duplicates = function (panel) {
+            append(panel, safeNote());
+            var top = h('div', {});
+            panel.appendChild(top);
+            var listHost = h('div', {});
+            panel.appendChild(listHost);
+            section(top, 'Duplicate movies and shows', function (body) {
+                return api('GET', 'Duplicates').then(function (d) {
+                    clear(body);
+                    state.dupData = d;
+                    var r = d.result;
+                    body.appendChild(h('div', { className: 'at-row' },
+                        scanButton('duplicates', d.scan, r ? 'Scan again' : 'Scan for duplicates', function () { state.loaded.duplicates = false; showTab('duplicates', true); }),
+                        h('span', { className: 'at-muted', text: r ? 'Last scan ' + fmtDate(r.scannedUtc, true) + ': ' + r.itemsScanned + ' items in ' + r.durationSeconds + 's' : 'Not scanned yet. Scanning is read-only.' })));
+                    if (!r) { body.appendChild(h('p', { className: 'at-muted', text: 'The scan groups movies and series by shared TMDb/TVDb/IMDb ids, then by normalised title + year, compares episodes between copies, and checks Sonarr/Radarr paths, drives and watch history. Nothing is changed.' })); return; }
+                    (r.problems || []).forEach(function (p) { body.appendChild(h('div', { className: 'at-warn', text: p })); });
+                    var markedCount = Object.keys(d.marked || {}).length;
+                    body.appendChild(h('div', { className: 'at-row' },
+                        badge(plural(r.groups.length, 'duplicate group'), 'at-b-info'),
+                        badge(r.groups.filter(function (g) { return g.confidence === 'High'; }).length + ' high', 'at-b-high'),
+                        badge(r.groups.filter(function (g) { return g.confidence === 'Medium'; }).length + ' medium', 'at-b-medium'),
+                        badge(r.groups.filter(function (g) { return g.confidence === 'Low'; }).length + ' low', 'at-b-low'),
+                        badge(markedCount + ' marked for removal', 'at-b-remove')));
+                    body.appendChild(h('div', { className: 'at-row' },
+                        btn('Mark all High/Medium recommendations', function () {
+                            var ids = r.groups.filter(function (g) { return g.autoSelect; }).map(function (g) { return g.id; });
+                            api('POST', 'Duplicates/Mark', { groupIds: ids, marked: true }).then(function () { showTab('duplicates', true); }, function (e) { body.appendChild(errorBox(e)); });
+                        }),
+                        btn('Clear marks', function () {
+                            api('POST', 'Duplicates/Mark', { groupIds: Object.keys(d.marked || {}), marked: false }).then(function () { showTab('duplicates', true); }, function (e) { body.appendChild(errorBox(e)); });
+                        }),
+                        btn('Export marked (CSV)', function () { downloadFile('Duplicates/Export?format=csv&scope=marked', 'removal-list.csv').catch(function (e) { body.appendChild(errorBox(e)); }); }),
+                        btn('Export marked (JSON)', function () { downloadFile('Duplicates/Export?format=json&scope=marked', 'removal-list.json').catch(function (e) { body.appendChild(errorBox(e)); }); }),
+                        btn('Export all recommendations (CSV)', function () { downloadFile('Duplicates/Export?format=csv&scope=recommended', 'recommended.csv').catch(function (e) { body.appendChild(errorBox(e)); }); })));
+                    body.appendChild(h('p', { className: 'at-muted', text: 'Marking only adds a copy to the removal report and export. Nothing is deleted unless you open "Remove..." on a group, preview it and confirm.' }));
+                    var filter = h('input', { type: 'search', placeholder: 'Filter by title or path', value: state.dup.filter, oninput: function () { state.dup.filter = filter.value; state.dup.page = 0; renderGroups(); } });
+                    var kind = h('select', { onchange: function () { state.dup.kind = kind.value; state.dup.page = 0; renderGroups(); } }, ['', 'Movie', 'Series'].map(function (k) { return h('option', { value: k, text: k || 'Movies and series', selected: state.dup.kind === k }); }));
+                    var conf = h('select', { onchange: function () { state.dup.conf = conf.value; state.dup.page = 0; renderGroups(); } }, ['', 'High', 'Medium', 'Low'].map(function (k) { return h('option', { value: k, text: k ? k + ' confidence' : 'Any confidence', selected: state.dup.conf === k }); }));
+                    body.appendChild(h('div', { className: 'at-row' }, filter, kind, conf));
+                    renderGroups();
+                    renderExtras();
+                });
+            }).catch(function () { /* shown in the section */ });
+
+            function renderGroups() {
+                clear(listHost);
+                var r = state.dupData && state.dupData.result;
+                if (!r) { return; }
+                var f = (state.dup.filter || '').toLowerCase();
+                var groups = r.groups.filter(function (g) {
+                    if (state.dup.kind && g.kind !== state.dup.kind) { return false; }
+                    if (state.dup.conf && g.confidence !== state.dup.conf) { return false; }
+                    if (!f) { return true; }
+                    return (g.title || '').toLowerCase().indexOf(f) >= 0 || g.copies.some(function (c) { return (c.item.path || '').toLowerCase().indexOf(f) >= 0; });
+                });
+                if (groups.length === 0) { listHost.appendChild(h('div', { className: 'at-card' }, h('p', { text: r.groups.length ? 'No group matches the filter.' : 'No duplicates found.' }))); return; }
+                var pages = Math.ceil(groups.length / PAGE_SIZE);
+                state.dup.page = Math.min(state.dup.page, pages - 1);
+                var pager = pagerEl(state.dup.page, pages, groups.length, function (p) { state.dup.page = p; renderGroups(); window.scrollTo(0, listHost.offsetTop - 60); });
+                listHost.appendChild(pager);
+                groups.slice(state.dup.page * PAGE_SIZE, (state.dup.page + 1) * PAGE_SIZE).forEach(function (g) { listHost.appendChild(groupCard(g)); });
+                listHost.appendChild(pagerEl(state.dup.page, pages, groups.length, function (p) { state.dup.page = p; renderGroups(); window.scrollTo(0, listHost.offsetTop - 60); }));
+            }
+
+            function renderExtras() {
+                var r = state.dupData && state.dupData.result;
+                if (!r) { return; }
+                var extras = h('div', {});
+                if (r.episodeGroups && r.episodeGroups.length) {
+                    var det = h('details', {}, h('summary', { text: plural(r.episodeGroups.length, 'duplicate episode') + ' inside series' }));
+                    r.episodeGroups.forEach(function (g) { det.appendChild(groupCard(g)); });
+                    extras.appendChild(h('div', { className: 'at-card' }, det));
+                }
+                var mv = h('details', {}, h('summary', { text: plural((r.mergedVersions || []).length, 'movie') + ' with versions Jellyfin merged on purpose (not a problem)' }));
+                var tbl = h('table', { className: 'at-table' }, h('tr', {}, h('th', { text: 'Title' }), h('th', { text: 'Versions' }), h('th', { text: 'Drive' }), h('th', { text: 'Files' })));
+                (r.mergedVersions || []).forEach(function (m) { tbl.appendChild(h('tr', {}, h('td', { text: m.name + (m.year ? ' (' + m.year + ')' : '') }), h('td', { text: String(m.versions) }), h('td', { text: m.drive || '-' }), h('td', { className: 'at-mono', text: (m.files || []).join('\n') }))); });
+                mv.appendChild(h('div', { className: 'at-table-wrap' }, tbl));
+                extras.appendChild(h('div', { className: 'at-card' }, mv));
+                panel.appendChild(extras);
+            }
+        };
+
+        function pagerEl(p, pages, total, go) {
+            if (pages <= 1) { return h('div', { className: 'at-muted', text: plural(total, 'result') }); }
+            return h('div', { className: 'at-pager' }, btn('Previous', function () { go(p - 1); }, 'at-small', { disabled: p === 0 }), h('span', { text: 'Page ' + (p + 1) + ' of ' + pages + ' (' + total + ')' }), btn('Next', function () { go(p + 1); }, 'at-small', { disabled: p >= pages - 1 }));
+        }
+
+        function groupCard(g) {
+            var card = h('div', { className: 'at-card', id: 'dup-' + g.id });
+            var marked = state.dupData && state.dupData.marked && state.dupData.marked[g.id];
+            var poster = h('img', { className: 'at-poster', alt: '', loading: 'lazy', src: posterUrl(g.posterItemId) });
+            poster.addEventListener('error', function () { poster.style.visibility = 'hidden'; });
+            card.appendChild(h('div', { className: 'at-group-head' }, poster,
+                h('div', { style: 'min-width:0;flex:1' },
+                    h('h3', { text: g.title + (g.year ? ' (' + g.year + ')' : '') }),
+                    h('div', { className: 'at-row' }, badge(g.kind, 'at-b-info'), badge(g.confidence + ' confidence', 'at-b-' + g.confidence.toLowerCase()), marked ? badge('Marked for removal', 'at-b-remove') : null, g.overridden ? badge('Your choice', 'at-b-medium') : null),
+                    h('div', { className: 'at-muted', text: g.confidenceReason }),
+                    h('ul', { className: 'at-list' }, g.evidence.map(function (e) { return h('li', { text: e }); })),
+                    (g.notes || []).length ? h('ul', { className: 'at-list at-muted' }, g.notes.map(function (n) { return h('li', { text: n }); })) : null)));
+            var copies = h('div', { className: 'at-copies' });
+            g.copies.slice().sort(function (a, b) { return (a.decision === 'Keep' ? 0 : 1) - (b.decision === 'Keep' ? 0 : 1); }).forEach(function (c) { copies.appendChild(copyCard(g, c)); });
+            card.appendChild(copies);
+            card.appendChild(h('div', { className: 'at-row', style: 'margin-top:.6em' },
+                btn(marked ? 'Unmark' : 'Mark for removal (report only)', function () {
+                    api('POST', 'Duplicates/Mark', { groupIds: [g.id], marked: !marked }).then(function (ch) { state.dupData.marked = ch.marked; card.replaceWith(groupCard(g)); }, function (e) { card.appendChild(errorBox(e)); });
+                }),
+                btn('Remove...', function () { removeDialog(g); }, 'at-danger')));
+            return card;
+        }
+
+        function copyCard(g, c) {
+            var i = c.item;
+            var keep = c.decision === 'Keep';
+            var label = keep ? (c.recommended ? 'KEEP (recommended)' : 'KEEP (your choice)') : (c.recommended ? 'REMOVE (but this was recommended to keep)' : 'REMOVE (recommended)');
+            var ids = Object.keys(i.providerIds || {}).map(function (k) { return k + ' ' + i.providerIds[k]; }).join(', ') || 'none';
+            var images = ['Primary', 'Backdrop', 'Logo'].map(function (t) { return t + ' ' + ((i.imageCounts || {})[t] || 0); }).join(', ');
+            var video = [i.width && i.height ? i.width + 'x' + i.height : null, i.videoCodec, i.bitDepth ? i.bitDepth + '-bit' : null, i.videoRange && i.videoRange !== 'SDR' && i.videoRange !== 'Unknown' ? i.videoRange : null].filter(Boolean).join(' ') || 'unknown';
+            var episodes = g.kind === 'Series' ? c.episodeCount + (c.expectedEpisodes ? ' / ' + c.expectedEpisodes + ' expected (' + c.expectedSource + ')' : '') + (c.coverage ? '; ' + c.coverage.onlyHere + ' only here, ' + c.coverage.missingHere + ' missing here' : '') : null;
+            var watches = (c.watches || []).map(function (w) { return w.userName + (g.kind === 'Series' ? ' (' + w.playedCount + ' eps)' : '') + (w.favorite ? ' \u2605' : '') + (w.hasResume ? ' (resume)' : ''); }).join(', ') || 'nobody';
+            var arr = c.arrManaged === true ? 'Yes: ' + c.arrService + ' path ' + c.arrPath : c.arrManaged === false ? 'No' + (c.arrPath ? ' (' + c.arrService + ' has ' + c.arrPath + ')' : c.arrProblem ? ' (' + c.arrProblem + ')' : '') : 'not checked (not configured)';
+            var drive = c.drive ? c.drive + (c.driveFreeBytes !== null && c.driveFreeBytes !== undefined ? ' (' + fmtBytes(c.driveFreeBytes) + ' free of ' + fmtBytes(c.driveTotalBytes) + ')' : '') : 'no drive label (Settings > Drives)';
+            var kv = h('div', { className: 'at-kv' });
+            function row(k, v, mono) { if (v === null || v === undefined) { return; } kv.appendChild(h('span', { text: k })); kv.appendChild(h('span', { className: mono ? 'at-mono' : '', text: String(v) })); }
+            row('Path', i.folderPath || i.path, true);
+            row('On disk now', c.pathExists ? (c.filesMissing ? 'folder yes, ' + c.filesMissing + ' of ' + c.fileCount + ' files missing' : 'yes') : 'NO (drive not mounted?)');
+            row('Drive', drive);
+            row('Library', i.libraryName || '-');
+            row(g.kind === 'Series' ? 'Episodes' : 'Files', episodes !== null ? episodes : String(c.fileCount));
+            row('Size', fmtBytes(c.totalSizeBytes));
+            row('Video', video);
+            row('Bitrate', i.bitrate ? (i.bitrate / 1e6).toFixed(1) + ' Mbps' : '-');
+            row('Audio', (i.audioLanguages || []).join(', ') || '-');
+            row('Subtitles', (i.subtitleLanguages || []).join(', ') || '-');
+            row('Added', fmtDate(i.dateCreated));
+            row('Sonarr/Radarr', arr);
+            row('Provider ids', ids);
+            row('Images', images + (i.hasOverview ? ', overview' : ', no overview'));
+            row('Watched by', watches);
+            row('Score', c.score + ' points');
+            var el = h('div', { className: 'at-copy ' + (keep ? 'keep' : 'remove') },
+                h('div', { className: 'at-row' }, badge(label, keep ? 'at-b-keep' : 'at-b-remove'), h('a', { href: detailsLink(i.id), className: 'at-muted', text: 'Open in Jellyfin' })),
+                kv,
+                h('h4', { text: 'Reasons' }),
+                h('ul', { className: 'at-list' }, (c.factors || []).slice().sort(function (a, b) { return b.max - a.max; }).map(function (f) { return h('li', {}, h('span', { text: f.reason }), h('span', { className: 'at-muted', text: ' (' + f.name + ' ' + f.points + '/' + f.max + ')' })); })),
+                (c.warnings || []).map(function (w) { return h('div', { className: 'at-warn', text: w }); }));
+            if (!keep) {
+                el.appendChild(btn('Keep this copy instead', function () {
+                    api('POST', 'Duplicates/Groups/' + g.id + '/Keep', { keepItemId: i.id }).then(function (ng) {
+                        var groups = state.dupData.result.groups.concat(state.dupData.result.episodeGroups || []);
+                        for (var k = 0; k < groups.length; k++) { if (groups[k].id === ng.id) { Object.assign(groups[k], ng); } }
+                        var old = page.querySelector('#dup-' + g.id);
+                        if (old) { old.replaceWith(groupCard(ng)); }
+                    }, function (e) { el.appendChild(errorBox(e)); });
+                }, 'at-small'));
+            }
+            return el;
+        }
+
+        function removeDialog(g) {
+            var keepId = g.keepId;
+            var removeIds = g.copies.filter(function (c) { return c.item.id !== keepId; }).map(function (c) { return c.item.id; });
+            var dry = h('input', { type: 'checkbox', checked: state.status ? state.status.dryRunDefault : true });
+            var copyData = h('input', { type: 'checkbox', checked: true });
+            var delFiles = h('input', { type: 'checkbox' });
+            var ignore = h('input', { type: 'checkbox' });
+            var mAuto = h('input', { type: 'radio', name: 'atMethod', value: 'Auto', checked: true });
+            var mLib = h('input', { type: 'radio', name: 'atMethod', value: 'LibraryOnly' });
+            var keeper = g.copies.filter(function (c) { return c.item.id === keepId; })[0];
+            var out = h('div', {});
+            var typed = h('input', { type: 'text', placeholder: 'Type DELETE', autocomplete: 'off' });
+            var typedRow = h('label', { className: 'at-field at-hidden' }, h('span', { text: 'This deletes files. Type DELETE (capitals) to confirm:' }), typed);
+            var runBtn = btn('Run', run, 'at-danger', { disabled: true });
+            var plan = null;
+            function req() {
+                return { groupId: g.id, keepItemId: keepId, removeItemIds: removeIds, method: mLib.checked ? 'LibraryOnly' : 'Auto', deleteFiles: mAuto.checked && delFiles.checked, writeIgnoreFile: mLib.checked && ignore.checked, copyUserData: copyData.checked, dryRun: dry.checked };
+            }
+            function sync() { delFiles.disabled = !mAuto.checked; ignore.disabled = !mLib.checked; runBtn.disabled = true; plan = null; clear(out); }
+            [mAuto, mLib, delFiles, ignore, copyData, dry].forEach(function (x) { x.addEventListener('change', sync); });
+            function preview() {
+                clear(out).appendChild(h('span', { className: 'at-muted', text: 'Building preview (checks Sonarr/Radarr and file permissions; changes nothing)...' }));
+                api('POST', 'Duplicates/Plan', req()).then(function (p) {
+                    plan = p;
+                    clear(out);
+                    out.appendChild(h('h4', { text: 'Exactly what will happen' }));
+                    var ol = h('ol', { className: 'at-list' });
+                    p.steps.forEach(function (s) {
+                        var li = h('li', {}, h('span', { text: s.description }), s.bytes ? h('span', { className: 'at-muted', text: ' (' + fmtBytes(s.bytes) + ')' }) : null);
+                        if (!s.possible) {
+                            li.appendChild(h('div', { className: 'at-error', text: s.blocker }));
+                            (s.manualCommands || []).forEach(function (cmd) { var cb = btn('Copy', function () { copyText(cmd, cb); }, 'at-small'); li.appendChild(h('div', { className: 'at-cmd' }, h('code', { className: 'at-mono', text: cmd }), cb)); });
+                            if ((s.manualCommands || []).length) { li.appendChild(h('div', { className: 'at-muted', text: 'The command runs as root inside the Jellyfin container, using the same paths Jellyfin sees. You can also delete the folder from the ZimaOS Files app. If the folder is mounted read-only, delete it on the host.' })); }
+                        }
+                        ol.appendChild(li);
+                    });
+                    out.appendChild(ol);
+                    out.appendChild(h('p', {}, h('strong', { text: 'Space freed: ' + fmtBytes(p.bytesFreed) }), h('span', { className: 'at-muted', text: p.bytesFreed ? '' : ' (no files are deleted)' })));
+                    (p.warnings || []).forEach(function (w) { out.appendChild(h('div', { className: 'at-warn', text: w })); });
+                    if (p.safeMode && !dry.checked) { out.appendChild(h('div', { className: 'at-ok', text: 'Safe mode is on: only a dry run is possible. Tick "Dry run" or turn safe mode off in Settings.' })); }
+                    if (!p.canExecute) { out.appendChild(h('div', { className: 'at-error', text: 'This cannot run as chosen. Fix the blocked step above, or choose "Remove from Jellyfin library only".' })); }
+                    typedRow.classList.toggle('at-hidden', !(p.needsTypedDelete && !dry.checked));
+                    runBtn.textContent = dry.checked ? 'Run dry run' : (p.destructive ? 'Delete now' : 'Remove now');
+                    runBtn.disabled = !p.canExecute || (p.safeMode && !dry.checked);
+                }, function (e) { clear(out).appendChild(errorBox(e, preview)); });
+            }
+            function run() {
+                if (!plan) { return; }
+                var body = req(); body.token = plan.token; body.typedConfirmation = typed.value;
+                runBtn.disabled = true;
+                out.appendChild(h('span', { className: 'at-muted', text: 'Running...' }));
+                api('POST', 'Duplicates/Execute', body).then(function (res) {
+                    clear(out);
+                    out.appendChild(h('h4', { text: res.dryRun ? 'Dry run: nothing was changed' : 'Result' }));
+                    out.appendChild(h('ol', { className: 'at-list' }, res.steps.map(function (s) { return h('li', {}, badge(s.result || '?', s.result === 'Done' || s.result === 'WouldDo' ? 'at-b-keep' : 'at-b-remove'), h('span', { text: ' ' + s.description }), s.resultDetail ? h('div', { className: s.result === 'Failed' ? 'at-error' : 'at-muted', text: s.resultDetail }) : null); })));
+                    out.appendChild(h('p', { className: 'at-muted', text: 'Recorded in the Activity Log.' }));
+                    if (!res.dryRun) { state.loaded.duplicates = false; state.loaded.activity = false; }
+                }, function (e) { out.appendChild(errorBox(e)); });
+            }
+            var content = h('div', {},
+                h('p', {}, h('span', { text: 'Keep: ' }), h('span', { className: 'at-mono', text: (keeper.item.folderPath || keeper.item.path) + (keeper.drive ? ' [' + keeper.drive + ']' : '') })),
+                h('p', {}, h('span', { text: 'Remove: ' }), h('span', { className: 'at-mono', text: g.copies.filter(function (c) { return c.item.id !== keepId; }).map(function (c) { return (c.item.folderPath || c.item.path) + (c.drive ? ' [' + c.drive + ']' : ''); }).join('\n') })),
+                h('label', { className: 'at-check' }, mAuto, h('span', { text: 'Recommended: copies Sonarr/Radarr manage are deleted through Sonarr/Radarr; other copies are removed from the Jellyfin library.' })),
+                h('label', { className: 'at-check', style: 'margin-left:1.6em' }, delFiles, h('span', { text: 'Also delete the files of copies Sonarr/Radarr do not manage (checked for write permission first; extra confirmation).' })),
+                h('label', { className: 'at-check' }, mLib, h('span', { text: 'Remove from Jellyfin library only (keep all files).' })),
+                h('label', { className: 'at-check', style: 'margin-left:1.6em' }, ignore, h('span', { text: 'Write an empty .ignore file in the folder so the next library scan does not add it back.' })),
+                h('label', { className: 'at-check' }, copyData, h('span', { text: 'First copy watch data (played, favourite, resume position) to the kept copy where it has none.' })),
+                h('label', { className: 'at-check' }, dry, h('span', { text: 'Dry run (show what would happen, change nothing).' })),
+                out, typedRow);
+            sync();
+            openDialog('Remove duplicate: ' + g.title, content, [btn('Preview', preview, 'at-primary'), runBtn]);
+        }
+
+        // ===================== IMAGES =====================
+        var TYPES = ['Primary', 'Backdrop', 'Logo', 'Thumb', 'Banner', 'Art', 'Disc'];
+        var TRANSPARENT_TYPES = { Logo: 1, Art: 1, Disc: 1 };
+        loaders.images = function (panel) {
+            append(panel, safeNote());
+            var split = h('div', { className: 'at-split' });
+            var left = h('div', {});
+            var right = h('div', {});
+            split.appendChild(left); split.appendChild(right);
+            panel.appendChild(split);
+            state.img.right = right;
+            var pick = h('div', { className: 'at-pick' });
+            var q = h('input', { type: 'search', placeholder: 'Search title (movie, show, season, episode, collection, person)', style: 'width:100%' });
+            var doSearch = function () {
+                if (!q.value.trim()) { return; }
+                clear(pick).appendChild(h('div', { className: 'at-muted', text: 'Searching...' }));
+                api('GET', 'Images/Search?q=' + encodeURIComponent(q.value.trim())).then(function (list) { setList(list); }, function (e) { clear(pick).appendChild(errorBox(e, doSearch)); });
+            };
+            q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { doSearch(); } });
+            var libSel = h('select', { style: 'width:100%' }, h('option', { value: '', text: 'Browse a library...' }));
+            libSel.addEventListener('change', function () {
+                if (!libSel.value) { return; }
+                clear(pick).appendChild(h('div', { className: 'at-muted', text: 'Loading...' }));
+                api('GET', 'Images/Browse?libraryId=' + encodeURIComponent(libSel.value)).then(setList, function (e) { clear(pick).appendChild(errorBox(e)); });
+            });
+            var missType = h('select', {}, ['Logo', 'Backdrop', 'Primary', 'Thumb', 'Banner', 'Art', 'Disc'].map(function (t) { return h('option', { value: t, text: 'Missing ' + (t === 'Primary' ? 'poster' : t.toLowerCase()) }); }));
+            var missKind = h('select', {}, [['Movie,Series', 'Movies + series'], ['Movie', 'Movies'], ['Series', 'Series'], ['Season', 'Seasons'], ['BoxSet', 'Collections']].map(function (k) { return h('option', { value: k[0], text: k[1] }); }));
+            var missBtn = btn('List', function () {
+                clear(pick).appendChild(h('div', { className: 'at-muted', text: 'Loading...' }));
+                api('GET', 'Images/Missing?type=' + missType.value + '&kinds=' + encodeURIComponent(missKind.value) + (libSel.value ? '&libraryId=' + libSel.value : '')).then(function (list) { state.img.type = missType.value; setList(list, true); }, function (e) { clear(pick).appendChild(errorBox(e)); });
+            }, 'at-small');
+            left.appendChild(h('div', { className: 'at-card' },
+                h('div', { className: 'at-row' }, q, btn('Search', doSearch, 'at-small')),
+                h('div', { className: 'at-row' }, libSel),
+                h('div', { className: 'at-row' }, missType, missKind, missBtn),
+                h('div', { className: 'at-muted', text: 'Bulk mode: list items missing an image type, then step through them with Previous/Next.' }),
+                pick));
+            api('GET', 'Libraries').then(function (libs) { libs.forEach(function (l) { libSel.appendChild(h('option', { value: l.id, text: l.name })); }); }, function (e) { left.appendChild(errorBox(e)); });
+            right.appendChild(h('div', { className: 'at-card' }, h('p', { className: 'at-muted', text: 'Search or browse on the left, then pick an item to see and change its artwork.' })));
+            function setList(list, bulk) {
+                state.img.list = list; state.img.bulk = !!bulk;
+                clear(pick);
+                if (!list.length) { pick.appendChild(h('div', { className: 'at-muted', style: 'padding:.5em', text: 'Nothing found.' })); return; }
+                list.forEach(function (it, idx) {
+                    pick.appendChild(h('button', { type: 'button', 'data-id': it.id, onclick: function () { openItem(idx); } },
+                        h('div', { text: it.name + (it.year ? ' (' + it.year + ')' : '') }),
+                        h('div', { className: 'at-muted', text: it.kind + (it.seriesName ? ' \u00b7 ' + it.seriesName : '') + (it.libraryName ? ' \u00b7 ' + it.libraryName : '') })));
+                });
+                if (bulk) { openItem(0); }
+            }
+            function openItem(idx) {
+                state.img.listIndex = idx;
+                pick.querySelectorAll('button').forEach(function (b, i) { b.setAttribute('aria-current', i === idx ? 'true' : 'false'); });
+                loadItem(state.img.list[idx].id);
+            }
+            state.img.openItem = openItem;
+        };
+
+        function loadItem(id) {
+            state.img.itemId = id;
+            state.img.results = []; state.img.analysis = {};
+            state.img.blobs.forEach(function (u) { URL.revokeObjectURL(u); }); state.img.blobs = [];
+            var right = clear(state.img.right);
+            var current = h('div', {});
+            var finder = h('div', {});
+            right.appendChild(current); right.appendChild(finder);
+            loadAll([section(current, null, function (body) {
+                return api('GET', 'Images/Item/' + id).then(function (d) {
+                    state.img.item = d;
+                    clear(body);
+                    var it = d.item;
+                    var nav = state.img.list.length > 1 ? h('span', { className: 'at-row' },
+                        btn('Previous', function () { state.img.openItem(Math.max(0, state.img.listIndex - 1)); }, 'at-small', { disabled: state.img.listIndex <= 0 }),
+                        h('span', { className: 'at-muted', text: (state.img.listIndex + 1) + ' / ' + state.img.list.length }),
+                        btn('Next', function () { state.img.openItem(Math.min(state.img.list.length - 1, state.img.listIndex + 1)); }, 'at-small', { disabled: state.img.listIndex >= state.img.list.length - 1 })) : null;
+                    var lockBtn = btn(d.locked ? 'Unlock item' : 'Lock item', function () {
+                        api('POST', 'Images/Item/' + id + '/Lock', { locked: !d.locked }).then(function () { loadItem(id); }, function (e) { body.appendChild(errorBox(e)); });
+                    }, 'at-small', { disabled: safeMode() });
+                    body.appendChild(h('div', { className: 'at-row', style: 'justify-content:space-between' },
+                        h('h3', { text: it.name + (it.year ? ' (' + it.year + ')' : '') + ' \u00b7 ' + it.kind }), nav));
+                    body.appendChild(h('div', { className: 'at-row' }, d.locked ? badge('Locked', 'at-b-medium') : badge('Not locked', 'at-b-info'), lockBtn, h('a', { href: detailsLink(id), text: 'Open in Jellyfin' }),
+                        h('span', { className: 'at-muted', text: 'Jellyfin has no per-image lock; "Lock item" stops metadata refreshes changing this item.' })));
+                    TYPES.forEach(function (t) {
+                        var slots = d.images.filter(function (x) { return x.type === t; });
+                        var grid = h('div', { className: 'at-imgs bg-check' });
+                        slots.forEach(function (s) {
+                            var img = h('img', { alt: t, loading: 'lazy', src: ApiClient.getUrl('Items/' + id + '/Images/' + t + '/' + s.index, { maxWidth: 400 }) });
+                            var actions = h('div', { className: 'at-row' });
+                            if (t === 'Backdrop' && slots.length > 1) {
+                                actions.appendChild(btn('\u25c0', function () { reorder(id, t, s.index, s.index - 1); }, 'at-small', { disabled: s.index === 0 || safeMode(), title: 'Move earlier' }));
+                                actions.appendChild(btn('\u25b6', function () { reorder(id, t, s.index, s.index + 1); }, 'at-small', { disabled: s.index === slots.length - 1 || safeMode(), title: 'Move later' }));
+                            }
+                            actions.appendChild(btn('Delete', function () { deleteImage(id, t, s); }, 'at-small', { disabled: safeMode() }));
+                            grid.appendChild(h('div', { className: 'at-imgcard' }, h('div', { className: 'at-imgbox' }, img),
+                                h('div', { text: (t === 'Backdrop' ? '#' + s.index + ' \u00b7 ' : '') + (s.width && s.height ? s.width + 'x' + s.height : 'size unknown') + (s.fileSize ? ' \u00b7 ' + fmtBytes(s.fileSize) : '') }),
+                                h('div', { className: 'at-mono at-muted', text: s.path || '' }), actions));
+                        });
+                        body.appendChild(h('h4', {}, h('span', { text: t + (t === 'Primary' ? ' (poster)' : t === 'Art' ? ' (clearart)' : '') + ' ' }), h('span', { className: 'at-muted', text: slots.length ? '(' + slots.length + ')' : '(none)' }), ' ', btn('Find ' + t, function () { state.img.type = t; renderFinder(finder); finder.scrollIntoView({ behavior: 'smooth' }); }, 'at-small')));
+                        if (slots.length) { body.appendChild(grid); }
+                    });
+                    renderFinder(finder);
+                });
+            })]);
+        }
+
+        function reorder(id, type, from, to) {
+            api('POST', 'Images/Item/' + id + '/Reorder', { type: type, index: from, to: to }).then(function () { loadItem(id); }, function (e) { state.img.right.prepend(errorBox(e)); });
+        }
+        function deleteImage(id, type, slot) {
+            var img = h('img', { src: ApiClient.getUrl('Items/' + id + '/Images/' + type + '/' + slot.index, { maxWidth: 400 }), style: 'max-width:100%;max-height:14em' });
+            openDialog('Delete ' + type + (type === 'Backdrop' ? ' #' + slot.index : '') + '?', h('div', {}, h('div', { className: 'at-imgbox bg-check', style: 'height:14em' }, img), h('p', { className: 'at-mono', text: slot.path || '' }), h('p', { text: 'The image file is removed from the item. A metadata refresh may download a new one unless the item is locked.' })),
+                [btn('Delete image', function () {
+                    api('POST', 'Images/Item/' + id + '/Delete', { type: type, index: slot.index }).then(function () { closeDialog(); loadItem(id); }, function (e) { dialog.appendChild(errorBox(e)); });
+                }, 'at-danger', { disabled: safeMode() })]);
+        }
+
+        function renderFinder(host) {
+            clear(host);
+            var d = state.img.item;
+            if (!d) { return; }
+            var card = h('div', { className: 'at-card' });
+            host.appendChild(card);
+            var typeSel = h('select', {}, TYPES.map(function (t) { return h('option', { value: t, text: t, selected: t === state.img.type }); }));
+            var query = h('input', { type: 'search', value: d.defaultQueries[state.img.type] || '', style: 'flex:1;min-width:14em' });
+            typeSel.addEventListener('change', function () { state.img.type = typeSel.value; query.value = d.defaultQueries[typeSel.value] || ''; });
+            var useJf = h('input', { type: 'checkbox', checked: true });
+            var useWeb = h('input', { type: 'checkbox', checked: d.webSearchConfigured });
+            var allLang = h('input', { type: 'checkbox' });
+            var url = h('input', { type: 'url', placeholder: 'https://... paste an image URL', style: 'flex:1;min-width:14em' });
+            var file = h('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,image/gif' });
+            var results = h('div', {});
+            card.appendChild(h('h3', { text: 'Find images' }));
+            card.appendChild(h('div', { className: 'at-row' }, h('span', { text: 'Type' }), typeSel));
+            card.appendChild(h('div', { className: 'at-row' },
+                h('label', { className: 'at-check' }, useJf, h('span', { text: "Jellyfin's providers (" + ((d.remoteProviders || []).join(', ') || 'none') + ')' })),
+                h('label', { className: 'at-check' }, allLang, h('span', { text: 'all languages' })),
+                h('label', { className: 'at-check' }, useWeb, h('span', { text: 'Web image search' }))));
+            if (d.remoteProvidersError) { card.appendChild(h('div', { className: 'at-warn', text: d.remoteProvidersError })); }
+            if (!d.webSearchConfigured) { card.appendChild(h('div', { className: 'at-warn', text: 'No web image search provider is configured. Settings > Image search: choose Brave Search API or SerpApi and paste the key (it stays on the server). Google Custom Search is closed to new customers and ends 1 January 2027.' })); }
+            card.appendChild(h('div', { className: 'at-row' }, h('span', { text: 'Web query' }), query));
+            card.appendChild(h('div', { className: 'at-row' }, btn('Search', function () { search(); }, 'at-primary')));
+            card.appendChild(h('div', { className: 'at-row' }, url, btn('Use URL', function () {
+                if (!url.value.trim()) { return; }
+                addResults([{ url: url.value.trim(), source: 'URL', provider: 'Pasted URL' }], results, true);
+            }, 'at-small')));
+            card.appendChild(h('div', { className: 'at-row' }, h('span', { text: 'Or upload:' }), file));
+            file.addEventListener('change', function () {
+                var f = file.files && file.files[0];
+                if (!f) { return; }
+                if (f.size > 15 * 1024 * 1024) { results.prepend(h('div', { className: 'at-error', text: 'The file is larger than 15 MB.' })); return; }
+                var reader = new FileReader();
+                reader.onload = function () { applyDialog({ url: null, dataBase64: reader.result, source: 'Upload', provider: f.name, previewSrc: reader.result }); };
+                reader.readAsDataURL(f);
+            });
+            card.appendChild(results);
+            function search() {
+                state.img.results = [];
+                clear(results);
+                var tasks = [];
+                if (useJf.checked) {
+                    var jfBox = h('div', {}); results.appendChild(jfBox);
+                    tasks.push(section(jfBox, "From Jellyfin's providers", function (b) {
+                        return api('GET', 'Images/Item/' + state.img.itemId + '/Remote?type=' + state.img.type + '&allLanguages=' + allLang.checked).then(function (list) { clear(b).appendChild(h('span', { className: 'at-muted', text: plural(list.length, 'image') })); list.forEach(function (x) { x.source = 'Jellyfin'; }); addResults(list, null); });
+                    }));
+                }
+                if (useWeb.checked) {
+                    var webBox = h('div', {}); results.appendChild(webBox);
+                    tasks.push(section(webBox, 'From web image search', function (b) {
+                        return api('GET', 'Images/Item/' + state.img.itemId + '/Web?type=' + state.img.type + '&q=' + encodeURIComponent(query.value)).then(function (r) {
+                            clear(b);
+                            if (!r.configured) { b.appendChild(h('div', { className: 'at-warn', text: r.help })); return; }
+                            b.appendChild(h('span', { className: 'at-muted', text: r.provider + ': ' + plural(r.results.length, 'image') + ' for "' + r.query + '"' }));
+                            addResults(r.results, null);
+                        });
+                    }));
+                }
+                var gridHost = h('div', {}); results.appendChild(gridHost);
+                state.img.gridHost = gridHost;
+                loadAll(tasks).then(function () { renderGrid(); analyseAll(); });
+            }
+            state.img.resultsHost = results;
+        }
+
+        function addResults(list, host, immediate) {
+            list.forEach(function (x) { if (!state.img.results.some(function (y) { return y.url === x.url; })) { state.img.results.push(x); } });
+            if (immediate) {
+                if (!state.img.gridHost) { state.img.gridHost = h('div', {}); (host || state.img.resultsHost).appendChild(state.img.gridHost); }
+                renderGrid(); analyseAll();
+            }
+        }
+
+        function analyseAll() {
+            var todo = state.img.results.map(function (r) { return r.url; }).filter(function (u) { return !state.img.analysis[u]; });
+            var kind = state.img.item ? state.img.item.item.kind : 'Movie';
+            var batches = [];
+            for (var i = 0; i < todo.length; i += 8) { batches.push(todo.slice(i, i + 8)); }
+            return batches.reduce(function (p, batch) {
+                return p.then(function () {
+                    return api('POST', 'Images/Analyze', { urls: batch, type: state.img.type, kind: kind }).then(function (res) { res.forEach(function (a) { state.img.analysis[a.url] = a; }); renderGrid(); },
+                        function (e) { batch.forEach(function (u) { state.img.analysis[u] = { url: u, ok: false, error: e.message, warnings: [] }; }); renderGrid(); });
+                });
+            }, Promise.resolve());
+        }
+
+        var filters = { transparentOnly: false, minW: 0, minH: 0, aspect: '', source: '', lang: '' };
+        function renderGrid() {
+            var host = state.img.gridHost;
+            if (!host) { return; }
+            clear(host);
+            var transparentType = !!TRANSPARENT_TYPES[state.img.type];
+            var bgSel = h('select', { onchange: function () { state.img.bg = bgSel.value; grid.className = 'at-imgs ' + state.img.bg; } }, [['bg-check', 'Checkerboard'], ['bg-dark', 'Dark'], ['bg-light', 'Light']].map(function (o) { return h('option', { value: o[0], text: o[1] + ' background', selected: state.img.bg === o[0] }); }));
+            var to = h('input', { type: 'checkbox', checked: filters.transparentOnly, onchange: function () { filters.transparentOnly = to.checked; renderGrid(); } });
+            var minW = h('input', { type: 'number', min: 0, step: 100, value: filters.minW || '', placeholder: 'min width', style: 'width:7em', onchange: function () { filters.minW = Number(minW.value) || 0; renderGrid(); } });
+            var minH = h('input', { type: 'number', min: 0, step: 100, value: filters.minH || '', placeholder: 'min height', style: 'width:7em', onchange: function () { filters.minH = Number(minH.value) || 0; renderGrid(); } });
+            var aspect = h('select', { onchange: function () { filters.aspect = aspect.value; renderGrid(); } }, [['', 'Any shape'], ['poster', 'Poster 2:3'], ['wide', '16:9'], ['logo', 'Wide (logo)'], ['square', 'Square']].map(function (o) { return h('option', { value: o[0], text: o[1], selected: filters.aspect === o[0] }); }));
+            var sources = {}; var langs = {};
+            state.img.results.forEach(function (r) { sources[r.provider || r.source] = 1; if (r.language) { langs[r.language] = 1; } });
+            var src = h('select', { onchange: function () { filters.source = src.value; renderGrid(); } }, [h('option', { value: '', text: 'Any source' })].concat(Object.keys(sources).map(function (s) { return h('option', { value: s, text: s, selected: filters.source === s }); })));
+            var lang = h('select', { onchange: function () { filters.lang = lang.value; renderGrid(); } }, [h('option', { value: '', text: 'Any language' })].concat(Object.keys(langs).map(function (s) { return h('option', { value: s, text: s, selected: filters.lang === s }); })));
+            host.appendChild(h('div', { className: 'at-row' }, bgSel, h('label', { className: 'at-check' }, to, h('span', { text: 'Transparent only' })), minW, minH, aspect, src, lang));
+            var grid = h('div', { className: 'at-imgs ' + state.img.bg });
+            var shown = state.img.results.map(function (r) { return { r: r, a: state.img.analysis[r.url] }; }).filter(function (x) {
+                var w = (x.a && x.a.ok && x.a.width) || x.r.width || 0, hh = (x.a && x.a.ok && x.a.height) || x.r.height || 0, ar = hh ? w / hh : 0;
+                if (filters.transparentOnly && !(x.a && x.a.transparency === 'Transparent')) { return false; }
+                if (filters.minW && w < filters.minW) { return false; }
+                if (filters.minH && hh < filters.minH) { return false; }
+                if (filters.source && (x.r.provider || x.r.source) !== filters.source) { return false; }
+                if (filters.lang && x.r.language !== filters.lang) { return false; }
+                if (filters.aspect === 'poster' && !(ar > 0.6 && ar < 0.75)) { return false; }
+                if (filters.aspect === 'wide' && !(ar > 1.6 && ar < 1.95)) { return false; }
+                if (filters.aspect === 'logo' && !(ar >= 1.5)) { return false; }
+                if (filters.aspect === 'square' && !(ar > 0.9 && ar < 1.1)) { return false; }
+                return true;
+            });
+            if (transparentType) {
+                shown.sort(function (a, b) { var ta = a.a && a.a.transparency === 'Transparent' ? 0 : 1, tb = b.a && b.a.transparency === 'Transparent' ? 0 : 1; return ta - tb; });
+            }
+            shown.forEach(function (x) { grid.appendChild(resultCard(x.r, x.a)); });
+            host.appendChild(h('div', { className: 'at-muted', text: shown.length + ' of ' + state.img.results.length + ' shown' + (transparentType ? ' \u00b7 transparent images first' : '') }));
+            host.appendChild(grid);
+        }
+
+        function proxied(url, img) {
+            api('GET', 'Images/Proxy?url=' + encodeURIComponent(url), undefined, true).then(function (res) { return res.blob(); }).then(function (b) {
+                var u = URL.createObjectURL(b); state.img.blobs.push(u); img.src = u;
+            }, function () { img.alt = 'preview failed'; });
+        }
+
+        function resultCard(r, a) {
+            var img = h('img', { alt: '', loading: 'lazy' });
+            // Thumbnails from search engines are often JPEG copies without transparency; show the real image for transparent types.
+            if (TRANSPARENT_TYPES[state.img.type] || !r.thumbnailUrl) { proxied(r.url, img); } else { img.src = r.thumbnailUrl; img.addEventListener('error', function () { proxied(r.url, img); }, { once: true }); }
+            var w = (a && a.ok && a.width) || r.width, hh = (a && a.ok && a.height) || r.height;
+            var tbadge = !a ? badge('checking...', 'at-b-info') : !a.ok ? badge('could not check', 'at-b-low') : a.transparency === 'Transparent' ? badge('Transparent' + (a.transparentRatio ? ' ' + Math.round(a.transparentRatio * 100) + '%' : ''), 'at-b-keep') : badge(a.transparency, 'at-b-medium');
+            return h('div', { className: 'at-imgcard' }, h('div', { className: 'at-imgbox' }, img),
+                h('div', { className: 'at-row' }, tbadge, r.language ? badge(r.language, 'at-b-info') : null),
+                h('div', { text: (w && hh ? w + 'x' + hh + ' (' + (w / hh).toFixed(2) + ')' : 'size unknown') + (a && a.ok ? ' \u00b7 ' + fmtBytes(a.bytes) + ' ' + (a.format || '') : '') }),
+                h('div', { className: 'at-muted', text: (r.provider || r.source) + (r.communityRating ? ' \u00b7 rating ' + r.communityRating.toFixed(1) : '') }),
+                a && !a.ok ? h('div', { className: 'at-warn', text: a.error }) : null,
+                a && a.warnings ? a.warnings.map(function (x) { return h('div', { className: 'at-warn', text: x }); }) : null,
+                btn('Use this', function () { applyDialog({ url: r.url, source: r.source, provider: r.provider, analysis: a }); }, 'at-small at-primary', { disabled: a && !a.ok }));
+        }
+
+        function applyDialog(c) {
+            var d = state.img.item;
+            var id = state.img.itemId;
+            var type = state.img.type;
+            var slots = d.images.filter(function (x) { return x.type === type; });
+            var mode = h('select', {}, h('option', { value: 'replace', text: slots.length ? 'Replace the current ' + type : 'Set as ' + type }), type === 'Backdrop' ? h('option', { value: 'add', text: 'Add as an extra backdrop' }) : null);
+            var index = h('select', {}, slots.map(function (s) { return h('option', { value: s.index, text: 'Backdrop #' + s.index }); }));
+            var lock = h('input', { type: 'checkbox' });
+            var before = h('div', { className: 'at-imgbox ' + state.img.bg, style: 'height:14em' });
+            function showBefore() {
+                clear(before);
+                var i = mode.value === 'add' ? null : (type === 'Backdrop' ? Number(index.value || 0) : 0);
+                if (!slots.length || i === null) { before.appendChild(h('span', { className: 'at-muted', text: mode.value === 'add' ? '(added after the existing backdrops)' : '(none)' })); return; }
+                before.appendChild(h('img', { src: ApiClient.getUrl('Items/' + id + '/Images/' + type + '/' + i, { maxWidth: 500 }) }));
+            }
+            mode.addEventListener('change', function () { index.disabled = mode.value === 'add'; showBefore(); });
+            var after = h('div', { className: 'at-imgbox ' + state.img.bg, style: 'height:14em' });
+            var afterImg = h('img', {});
+            after.appendChild(afterImg);
+            if (c.previewSrc) { afterImg.src = c.previewSrc; } else { proxied(c.url, afterImg); }
+            var warn = h('div', {});
+            if (c.analysis && c.analysis.warnings) { c.analysis.warnings.forEach(function (x) { warn.appendChild(h('div', { className: 'at-warn', text: x })); }); }
+            if (TRANSPARENT_TYPES[type] && c.analysis && c.analysis.transparency === 'Opaque') { warn.appendChild(h('div', { className: 'at-warn', text: 'You picked an opaque image for ' + type + '. It will show as a solid rectangle over artwork.' })); }
+            var out = h('div', {});
+            showBefore();
+            openDialog('Change ' + type + ' of ' + d.item.name, h('div', {},
+                h('div', { className: 'at-grid' }, h('div', {}, h('h4', { text: 'Before' }), before), h('div', {}, h('h4', { text: 'After' }), after)),
+                h('div', { className: 'at-row' }, mode, type === 'Backdrop' && slots.length ? index : null),
+                h('label', { className: 'at-check' }, lock, h('span', { text: 'Lock the item afterwards so metadata refreshes do not replace it (Jellyfin locks the whole item; there is no per-image lock).' })),
+                h('p', { className: 'at-muted', text: 'Source: ' + (c.provider || c.source) + (c.url ? ' \u00b7 ' + c.url : '') + '. The server downloads the image and saves it through Jellyfin, the same way the dashboard does.' }),
+                warn, safeMode() ? h('div', { className: 'at-ok', text: 'Safe mode is on: changes are refused. Turn it off in Settings.' }) : null, out),
+                [btn('Apply', function () {
+                    clear(out).appendChild(h('span', { className: 'at-muted', text: 'Saving...' }));
+                    api('POST', 'Images/Item/' + id + '/Apply', { type: type, url: c.url, dataBase64: c.dataBase64, mode: mode.value, index: type === 'Backdrop' ? Number(index.value || 0) : null, lock: lock.checked, confirm: true })
+                        .then(function (res) { clear(out).appendChild(h('div', { className: 'at-ok', text: res.message })); (res.warnings || []).forEach(function (x) { out.appendChild(h('div', { className: 'at-warn', text: x })); }); state.loaded.activity = false; setTimeout(function () { closeDialog(); loadItem(id); }, 900); },
+                            function (e) { clear(out).appendChild(errorBox(e)); });
+                }, 'at-primary', { disabled: safeMode() })]);
+        }
+
+        // ===================== HEALTH =====================
+        var CATS = { UnreachablePath: 'Unreachable library folder', GhostItem: 'File missing (ghost item)', NoProviderIds: 'No provider ids', FewEpisodes: 'Few episodes', MissingImage: 'Missing image', MissingOverview: 'Missing overview', MissingYear: 'Missing year', SeasonGap: 'Missing seasons', EpisodeGap: 'Missing episodes', FolderNaming: 'Folder naming', SubtitleAudit: 'Subtitles', AudioAudit: 'Audio language', QualityAudit: 'Quality', DirectPlay: 'May not direct play', EmptyFolder: 'Empty folder', LeftoverFile: 'Leftover file' };
+        loaders.health = function (panel) {
+            append(panel, safeNote());
+            var top = h('div', {}), paths = h('div', {}), list = h('div', {});
+            panel.appendChild(top); panel.appendChild(paths); panel.appendChild(list);
+            section(top, 'Library health', function (body) {
+                return api('GET', 'Health').then(function (d) {
+                    clear(body);
+                    var r = d.report;
+                    state.healthData = r;
+                    body.appendChild(h('div', { className: 'at-row' }, scanButton('health', d.scan, r ? 'Scan again' : 'Run health scan', function () { showTab('health', true); }),
+                        h('span', { className: 'at-muted', text: r ? 'Last scan ' + fmtDate(r.scannedUtc, true) + ': ' + r.itemsScanned + ' items in ' + r.durationSeconds + 's \u00b7 Jellyfin runs as ' + r.processUser : 'Not scanned yet. The scan is read-only; it may take several minutes on large libraries.' })));
+                    if (!r) { return; }
+                    var counts = h('div', { className: 'at-row' });
+                    Object.keys(r.counts).sort().forEach(function (k) { counts.appendChild(btn((CATS[k] || k) + ': ' + r.counts[k], function () { state.health.cat = k; state.health.page = 0; renderIssues(list); }, 'at-small')); });
+                    body.appendChild(counts);
+                    renderPaths(paths, r);
+                    renderIssues(list);
+                });
+            }).catch(function () { /* shown */ });
+        };
+
+        function renderPaths(host, r) {
+            clear(host);
+            var tbl = h('table', { className: 'at-table' }, h('tr', {}, ['Library', 'Folder', 'Drive', 'Status', 'Write access', ''].map(function (x) { return h('th', { text: x }); })));
+            r.libraryPaths.forEach(function (p) {
+                var ok = p.exists && p.readable && !p.empty;
+                tbl.appendChild(h('tr', {}, h('td', { text: p.library }), h('td', { className: 'at-mono', text: p.path }), h('td', { text: p.drive || '-' }),
+                    h('td', {}, badge(ok ? 'OK' : 'Problem', ok ? 'at-b-keep' : 'at-b-remove'), h('div', { className: 'at-muted', text: p.status })),
+                    h('td', { text: p.exists ? (p.writable ? 'Writable' : (p.writeProblem || 'Not writable')) : '-' }),
+                    h('td', {}, btn('Rescan library', function () { rescan(p.libraryId, host); }, 'at-small', { disabled: safeMode() }))));
+            });
+            host.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Library folders' }), h('div', { className: 'at-table-wrap' }, tbl),
+                h('p', { className: 'at-muted', text: '"Not writable" only matters for deleting files from Jellyfin. Admin Toolkit never changes permissions, ownership or mounts.' })));
+        }
+        function rescan(libId, host) {
+            api('POST', 'Health/RescanLibrary', { libraryId: libId }).then(function () { host.prepend(h('div', { className: 'at-ok', text: 'Library scan queued in Jellyfin.' })); }, function (e) { host.prepend(errorBox(e)); });
+        }
+
+        function renderIssues(host) {
+            clear(host);
+            var r = state.healthData;
+            if (!r) { return; }
+            var card = h('div', { className: 'at-card' });
+            host.appendChild(card);
+            var cat = h('select', { onchange: function () { state.health.cat = cat.value; state.health.page = 0; renderIssues(host); } }, [h('option', { value: '', text: 'All categories' })].concat(Object.keys(r.counts).sort().map(function (k) { return h('option', { value: k, text: (CATS[k] || k) + ' (' + r.counts[k] + ')', selected: state.health.cat === k }); })));
+            var sev = h('select', { onchange: function () { state.health.sev = sev.value; state.health.page = 0; renderIssues(host); } }, ['', 'Error', 'Warning', 'Info'].map(function (s) { return h('option', { value: s, text: s || 'Any severity', selected: state.health.sev === s }); }));
+            var txt = h('input', { type: 'search', placeholder: 'Filter text', value: state.health.text, onchange: function () { state.health.text = txt.value; state.health.page = 0; renderIssues(host); } });
+            var issues = r.issues.filter(function (i) {
+                if (state.health.cat && i.category !== state.health.cat) { return false; }
+                if (state.health.sev && i.severity !== state.health.sev) { return false; }
+                var t = (state.health.text || '').toLowerCase();
+                return !t || ((i.title || '') + ' ' + (i.path || '') + ' ' + i.detail).toLowerCase().indexOf(t) >= 0;
+            });
+            var selCount = Object.keys(state.health.selected).length;
+            card.appendChild(h('div', { className: 'at-row' }, cat, sev, txt,
+                btn('Refresh metadata for ' + selCount + ' selected', function () { refresh(Object.keys(state.health.selected), card); }, 'at-small', { disabled: !selCount || safeMode() }),
+                btn('Select all refreshable on this page', function () { pageItems.forEach(function (i) { if (i.itemId && i.actions.indexOf('refresh') >= 0) { state.health.selected[i.itemId] = 1; } }); renderIssues(host); }, 'at-small')));
+            var pages = Math.max(1, Math.ceil(issues.length / 100));
+            state.health.page = Math.min(state.health.page, pages - 1);
+            var pageItems = issues.slice(state.health.page * 100, (state.health.page + 1) * 100);
+            card.appendChild(pagerEl(state.health.page, pages, issues.length, function (p) { state.health.page = p; renderIssues(host); }));
+            var tbl = h('table', { className: 'at-table' }, h('tr', {}, ['', 'Severity', 'Category', 'Item', 'Details', 'Actions'].map(function (x) { return h('th', { text: x }); })));
+            pageItems.forEach(function (i) {
+                var cb = i.itemId && i.actions.indexOf('refresh') >= 0 ? h('input', { type: 'checkbox', checked: !!state.health.selected[i.itemId], onchange: function () { if (cb.checked) { state.health.selected[i.itemId] = 1; } else { delete state.health.selected[i.itemId]; } } }) : null;
+                var acts = h('div', { className: 'at-row' });
+                if (i.itemId && i.actions.indexOf('open') >= 0) { acts.appendChild(h('a', { href: detailsLink(i.itemId), text: 'Open' })); }
+                if (i.itemId && i.actions.indexOf('images') >= 0) { acts.appendChild(btn('Images', function () { openImagesFor(i.itemId, i.title); }, 'at-small')); }
+                if (i.itemId && i.actions.indexOf('refresh') >= 0) { acts.appendChild(btn('Refresh', function () { refresh([i.itemId], card); }, 'at-small', { disabled: safeMode() })); }
+                tbl.appendChild(h('tr', {}, h('td', {}, cb), h('td', {}, badge(i.severity, i.severity === 'Error' ? 'at-b-remove' : i.severity === 'Warning' ? 'at-b-medium' : 'at-b-info')),
+                    h('td', { text: CATS[i.category] || i.category }), h('td', {}, h('div', { text: i.title }), i.path ? h('div', { className: 'at-mono at-muted', text: i.path }) : null),
+                    h('td', { text: i.detail }), h('td', {}, acts)));
+            });
+            card.appendChild(h('div', { className: 'at-table-wrap' }, tbl));
+            card.appendChild(h('p', { className: 'at-muted', text: 'Quality and direct-play notes are informational. Empty folders and leftover files are only reported; nothing is deleted.' }));
+        }
+        function refresh(ids, host) {
+            api('POST', 'Health/Refresh', { itemIds: ids, replaceAll: false }).then(function (r) { host.prepend(h('div', { className: 'at-ok', text: r.queued + ' item(s) queued for a metadata refresh in Jellyfin.' })); state.health.selected = {}; }, function (e) { host.prepend(errorBox(e)); });
+        }
+        function openImagesFor(id, title) {
+            showTab('images');
+            setTimeout(function () {
+                state.img.list = [{ id: id, name: title, kind: '' }];
+                state.img.listIndex = 0;
+                if (state.img.right) { loadItem(id); }
+            }, 0);
+        }
+
+        // ===================== STORAGE =====================
+        loaders.storage = function (panel) {
+            var drives = h('div', {}), main = h('div', {});
+            panel.appendChild(drives); panel.appendChild(main);
+            loadAll([
+                section(drives, 'Drives', function (body) {
+                    return api('GET', 'Storage/Drives').then(function (list) {
+                        clear(body);
+                        if (!list.length) { body.appendChild(h('p', { className: 'at-muted', text: 'No drives or library folders found. Add drive names in Settings > Drives.' })); }
+                        var grid = h('div', { className: 'at-grid' });
+                        list.forEach(function (d) {
+                            var pct = d.totalBytes ? Math.round(100 * d.usedBytes / d.totalBytes) : 0;
+                            grid.appendChild(h('div', { className: 'at-card' }, h('h4', { text: d.label }), h('div', { className: 'at-mono at-muted', text: d.prefix }),
+                                d.totalBytes ? h('div', { className: 'at-bar' + (pct > 90 ? ' at-full' : '') }, h('div', { style: 'width:' + pct + '%' })) : null,
+                                d.totalBytes ? h('div', { text: fmtBytes(d.usedBytes) + ' used \u00b7 ' + fmtBytes(d.freeBytes) + ' free \u00b7 ' + fmtBytes(d.totalBytes) + ' total (' + pct + '%)' }) : null,
+                                d.problem ? h('div', { className: 'at-warn', text: d.problem }) : null));
+                        });
+                        body.appendChild(grid);
+                        body.appendChild(h('p', { className: 'at-muted', text: 'Space is that of the file system Jellyfin sees at each path (inside the container).' }));
+                    });
+                }),
+                section(main, 'Sizes and watch activity', function (body) {
+                    return api('GET', 'Storage').then(function (d) {
+                        clear(body);
+                        state.storageData = d;
+                        var r = d.report;
+                        body.appendChild(h('div', { className: 'at-row' }, scanButton('storage', d.scan, r ? 'Scan again' : 'Scan sizes and play data', function () { showTab('storage', true); }),
+                            h('span', { className: 'at-muted', text: r ? 'Last scan ' + fmtDate(r.scannedUtc, true) + ' in ' + r.durationSeconds + 's' : 'Not scanned yet. Reads file sizes and every user\'s play data; read-only.' })));
+                        if (!r) { return; }
+                        var g = h('div', { className: 'at-grid' });
+                        g.appendChild(bucketTable('Per library', r.libraries));
+                        g.appendChild(bucketTable('Per drive', r.drivesBySize));
+                        body.appendChild(g);
+                        var nw = h('div', {}); body.appendChild(nw); renderNotWatched(nw, d);
+                        var big = h('div', {}); body.appendChild(big); renderStorageTable(big, r.items);
+                    });
+                })
+            ]);
+        };
+        function bucketTable(title, rows) {
+            var t = h('table', { className: 'at-table' }, h('tr', {}, h('th', { text: 'Name' }), h('th', { text: 'Size' }), h('th', { text: 'Titles' })));
+            rows.forEach(function (b) { t.appendChild(h('tr', {}, h('td', { text: b.name }), h('td', { text: fmtBytes(b.bytes) }), h('td', { text: String(b.items) }))); });
+            return h('div', {}, h('h4', { text: title }), h('div', { className: 'at-table-wrap' }, t));
+        }
+        function renderNotWatched(host, d) {
+            clear(host);
+            var months = h('input', { type: 'number', min: 1, max: 240, value: d.notWatchedMonths, style: 'width:6em' });
+            var list = d.notWatched || [];
+            var total = list.reduce(function (s, i) { return s + i.bytes; }, 0);
+            host.appendChild(h('h4', { text: 'Not watched by anyone in ' + d.notWatchedMonths + ' months' }));
+            host.appendChild(h('div', { className: 'at-row' }, h('span', { text: 'Months' }), months,
+                btn('Update', function () { api('GET', 'Storage?notWatchedMonths=' + Number(months.value)).then(function (nd) { state.storageData = nd; renderNotWatched(host, nd); }, function (e) { host.appendChild(errorBox(e)); }); }, 'at-small'),
+                btn('Export CSV', function () { downloadFile('Storage/Export?scope=notwatched&months=' + Number(months.value), 'not-watched.csv').catch(function (e) { host.appendChild(errorBox(e)); }); }, 'at-small'),
+                h('span', { text: plural(list.length, 'title') + ', ' + fmtBytes(total) })));
+            renderStorageTable(host, list, 50);
+        }
+        function renderStorageTable(host, items, limit) {
+            var wrap = h('div', {});
+            host.appendChild(wrap);
+            var s = state.storage;
+            function draw() {
+                clear(wrap);
+                var drives = {}; items.forEach(function (i) { drives[i.drive || '(no label)'] = 1; });
+                var kind = h('select', { onchange: function () { s.kind = kind.value; draw(); } }, [['', 'All'], ['Movie', 'Movies'], ['Series', 'Series']].map(function (o) { return h('option', { value: o[0], text: o[1], selected: s.kind === o[0] }); }));
+                var drive = h('select', { onchange: function () { s.drive = drive.value; draw(); } }, [h('option', { value: '', text: 'All drives' })].concat(Object.keys(drives).map(function (dn) { return h('option', { value: dn, text: dn, selected: s.drive === dn }); })));
+                var rows = items.filter(function (i) { return (!s.kind || i.kind === s.kind) && (!s.drive || (i.drive || '(no label)') === s.drive); });
+                rows.sort(function (a, b) {
+                    var va = a[s.sort], vb = b[s.sort];
+                    if (s.sort === 'lastPlayed' || s.sort === 'dateAdded') { va = va ? new Date(va).getTime() : 0; vb = vb ? new Date(vb).getTime() : 0; }
+                    return (va > vb ? 1 : va < vb ? -1 : 0) * s.dir;
+                });
+                var max = limit || 200;
+                wrap.appendChild(h('div', { className: 'at-row' }, kind, drive, h('span', { className: 'at-muted', text: 'Showing ' + Math.min(max, rows.length) + ' of ' + rows.length + (limit ? '' : ' \u00b7 largest first by default') })));
+                function th(label, key) { return h('th', { 'data-sort': key, text: label + (s.sort === key ? (s.dir < 0 ? ' \u25bc' : ' \u25b2') : ''), onclick: function () { if (s.sort === key) { s.dir = -s.dir; } else { s.sort = key; s.dir = -1; } draw(); } }); }
+                var t = h('table', { className: 'at-table' }, h('tr', {}, h('th', { text: 'Title' }), th('Size', 'bytes'), h('th', { text: 'Drive' }), th('Last watched', 'lastPlayed'), th('Plays', 'playCount'), th('Added', 'dateAdded'), h('th', { text: '' })));
+                rows.slice(0, max).forEach(function (i) {
+                    var acts = h('div', { className: 'at-row' }, h('a', { href: detailsLink(i.id), text: 'Open' }), btn('Images', function () { openImagesFor(i.id, i.name); }, 'at-small'));
+                    if (i.duplicateGroupId) { acts.appendChild(btn('Duplicate group', function () { showTab('duplicates'); setTimeout(function () { var el = page.querySelector('#dup-' + i.duplicateGroupId); if (el) { el.scrollIntoView(); } else { state.dup.filter = i.name; showTab('duplicates', true); } }, 300); }, 'at-small')); }
+                    t.appendChild(h('tr', {}, h('td', {}, h('div', { text: i.name + (i.year ? ' (' + i.year + ')' : '') }), h('div', { className: 'at-muted', text: i.kind + (i.episodes ? ' \u00b7 ' + i.episodes + ' eps' : '') + (i.library ? ' \u00b7 ' + i.library : '') })),
+                        h('td', { text: fmtBytes(i.bytes) }), h('td', { text: i.drive || '-' }), h('td', { text: i.lastPlayed ? fmtDate(i.lastPlayed) + (i.lastPlayedBy ? ' (' + i.lastPlayedBy + ')' : '') : 'never' }),
+                        h('td', { text: String(i.playCount) }), h('td', { text: fmtDate(i.dateAdded) }), h('td', {}, acts)));
+                });
+                wrap.appendChild(h('div', { className: 'at-table-wrap' }, t));
+            }
+            draw();
+        }
+
+        // ===================== ACTIVITY =====================
+        loaders.activity = function (panel) {
+            var host = h('div', {}); panel.appendChild(host);
+            var f = { area: '', result: '', text: '' };
+            function load() {
+                clear(host);
+                return section(host, 'Activity log', function (body) {
+                    var q = 'Activity?limit=1000' + (f.area ? '&area=' + encodeURIComponent(f.area) : '') + (f.result ? '&result=' + encodeURIComponent(f.result) : '') + (f.text ? '&text=' + encodeURIComponent(f.text) : '');
+                    return api('GET', q).then(function (rows) {
+                        clear(body);
+                        var area = h('select', { onchange: function () { f.area = area.value; load(); } }, ['', 'Duplicates', 'Images', 'Health', 'Storage', 'Settings', 'Scan'].map(function (a) { return h('option', { value: a, text: a || 'All areas', selected: f.area === a }); }));
+                        var res = h('select', { onchange: function () { f.result = res.value; load(); } }, ['', 'OK', 'Failed', 'DryRun', 'Refused'].map(function (a) { return h('option', { value: a, text: a || 'Any result', selected: f.result === a }); }));
+                        var txt = h('input', { type: 'search', value: f.text, placeholder: 'Search', onchange: function () { f.text = txt.value; load(); } });
+                        body.appendChild(h('div', { className: 'at-row' }, area, res, txt, btn('Export CSV', function () { downloadFile(q.replace('Activity?limit=1000', 'Activity/Export?x=1'), 'activity.csv').catch(function (e) { body.appendChild(errorBox(e)); }); }, 'at-small')));
+                        if (!rows.length) { body.appendChild(h('p', { className: 'at-muted', text: 'Nothing logged yet.' })); return; }
+                        var t = h('table', { className: 'at-table' }, h('tr', {}, ['When', 'Admin', 'Area', 'Action', 'Target', 'Result', 'Details'].map(function (x) { return h('th', { text: x }); })));
+                        rows.forEach(function (e) {
+                            t.appendChild(h('tr', {}, h('td', { text: fmtDate(e.timeUtc, true) }), h('td', { text: e.user }), h('td', { text: e.area }), h('td', { text: e.action }), h('td', { text: e.target }),
+                                h('td', {}, badge(e.result, e.result === 'OK' ? 'at-b-keep' : e.result === 'Failed' ? 'at-b-remove' : 'at-b-info')), h('td', { className: 'at-muted', text: e.detail })));
+                        });
+                        body.appendChild(h('div', { className: 'at-table-wrap' }, t));
+                        body.appendChild(h('p', { className: 'at-muted', text: 'Kept for the retention period set in Settings. API keys are never logged.' }));
+                    });
+                }).catch(function () { /* shown */ });
+            }
+            load();
+        };
+
+        // ===================== SETTINGS =====================
+        loaders.settings = function (panel) {
+            var formHost = h('div', {}), checkHost = h('div', {});
+            panel.appendChild(formHost); panel.appendChild(checkHost);
+            loadAll([
+                section(formHost, null, function (body) { return api('GET', 'Settings').then(function (d) { clear(body); renderSettings(body, d.settings, d.defaults); }); }),
+                section(checkHost, 'Self-check (which Jellyfin APIs work on this server)', function (body) {
+                    return api('GET', 'SelfCheck').then(function (list) {
+                        clear(body);
+                        list.forEach(function (c) { body.appendChild(h('div', { className: c.ok ? 'at-ok' : 'at-error' }, h('strong', { text: c.name + ': ' }), h('span', { text: c.detail }))); });
+                        var cb = btn('Copy diagnostics', function () { copyText(diagnostics(null) + '\n' + JSON.stringify(list, null, 2), cb); }, 'at-small');
+                        body.appendChild(h('div', { className: 'at-row' }, cb));
+                    });
+                })
+            ]);
+        };
+
+        function renderSettings(body, s, defaults) {
+            function field(label, input, help) { return h('label', { className: 'at-field' }, h('span', { text: label }), input, help ? h('span', { className: 'at-muted', text: help }) : null); }
+            function text(v, type) { return h('input', { type: type || 'text', value: v === null || v === undefined ? '' : v }); }
+            function num(v) { return h('input', { type: 'number', value: v, style: 'width:8em' }); }
+            function check(label, v, help) { var c = h('input', { type: 'checkbox', checked: !!v }); return { input: c, el: h('label', { className: 'at-check' }, c, h('span', {}, h('span', { text: label }), help ? h('div', { className: 'at-muted', text: help }) : null)) }; }
+            var f = {};
+            var safe = check('Safe mode (view only)', s.safeMode, 'ON for a new install. While on, the server refuses every change: no removals, no image changes, no refreshes. Scans, previews, dry runs and exports still work.');
+            var dry = check('Dry run ticked by default', s.dryRunDefault, 'Every removal dialog starts as a dry run.');
+            f.confirmationLevel = h('select', {}, [['TypeDelete', 'Confirmation dialog + type DELETE for file deletion (default)'], ['Dialog', 'Confirmation dialog only']].map(function (o) { return h('option', { value: o[0], text: o[1], selected: s.confirmationLevel === o[0] }); }));
+            body.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Safety' }), safe.el, dry.el, field('Confirmation for destructive actions', f.confirmationLevel)));
+
+            function serviceBlock(name, key, urlVal, keyVal, placeholder) {
+                var u = text(urlVal, 'url'); u.placeholder = placeholder;
+                var k = text(keyVal, 'password'); k.autocomplete = 'off';
+                var out = h('div', {});
+                var b = btn('Test connection', function () {
+                    clear(out).appendChild(h('span', { className: 'at-muted', text: 'Testing...' }));
+                    api('POST', 'Settings/Test/' + key, { url: u.value, apiKey: k.value }).then(function (r) { clear(out).appendChild(h('div', { className: r.ok ? 'at-ok' : 'at-error', text: r.message })); }, function (e) { clear(out).appendChild(errorBox(e)); });
+                }, 'at-small');
+                f[key + 'Url'] = u; f[key + 'Key'] = k;
+                return h('div', {}, h('h4', { text: name }), field('URL', u), field('API key (stored on the server, shown masked)', k), h('div', { className: 'at-row' }, b), out);
+            }
+            var arrCard = h('div', { className: 'at-card' }, h('h3', { text: 'Sonarr, Radarr, Jellyseerr' }),
+                h('div', { className: 'at-form' },
+                    serviceBlock('Sonarr', 'sonarr', s.sonarrUrl, s.sonarrApiKey, 'http://192.168.1.10:8989'),
+                    serviceBlock('Radarr', 'radarr', s.radarrUrl, s.radarrApiKey, 'http://192.168.1.10:7878'),
+                    serviceBlock('Jellyseerr (optional)', 'jellyseerr', s.jellyseerrUrl, s.jellyseerrApiKey, 'http://192.168.1.10:5055')));
+            var maps = rowsEditor(s.arrPathMappings || [], [['arrPrefix', 'Path in Sonarr/Radarr', '/tv'], ['jellyfinPrefix', 'Same folder in Jellyfin', '/data/tvshows']]);
+            f.arrMaps = maps;
+            arrCard.appendChild(h('h4', { text: 'Sonarr/Radarr path mappings' }));
+            arrCard.appendChild(h('p', { className: 'at-muted', text: 'Containers often see the same folder at different paths. Example: Sonarr uses /tv, Jellyfin uses /data/tvshows. Without a mapping, "managed by Sonarr" cannot be detected.' }));
+            arrCard.appendChild(maps.el);
+            body.appendChild(arrCard);
+
+            f.provider = h('select', {}, [['None', 'None'], ['Brave', 'Brave Search API (images endpoint)'], ['SerpApi', 'SerpApi (Google Images results)'], ['GoogleCse', 'Google Custom Search JSON API (legacy keys only; ends 1 Jan 2027)']].map(function (o) { return h('option', { value: o[0], text: o[1], selected: s.imageSearchProvider === o[0] }); }));
+            f.searchKey = text(s.imageSearchApiKey, 'password'); f.searchKey.autocomplete = 'off';
+            f.engineId = text(s.googleSearchEngineId);
+            var sOut = h('div', {});
+            body.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Image search' }),
+                h('p', { className: 'at-muted', text: "Google Images has no free API. Brave Search API (brave.com/search/api) and SerpApi (serpapi.com) are supported; both are paid per request with small free allowances. Google's Custom Search JSON API is closed to new customers and Google ends it on 1 January 2027. Keys stay on the server; the browser never sees them." }),
+                h('div', { className: 'at-form' }, field('Provider', f.provider), field('API key', f.searchKey), field('Google search engine id (cx), legacy only', f.engineId)),
+                h('div', { className: 'at-row' }, btn('Test search', function () {
+                    clear(sOut).appendChild(h('span', { className: 'at-muted', text: 'Searching "The Matrix 1999 poster"...' }));
+                    api('POST', 'Settings/TestImageSearch', { provider: f.provider.value, apiKey: f.searchKey.value, engineId: f.engineId.value }).then(function (r) { clear(sOut).appendChild(h('div', { className: 'at-ok', text: r.provider + ': ' + r.count + ' results for "' + r.query + '".' })); }, function (e) { clear(sOut).appendChild(errorBox(e)); });
+                }, 'at-small')), sOut));
+
+            var drives = rowsEditor(s.driveMappings || [], [['prefix', 'Path prefix (as Jellyfin sees it)', '/data/media8tb1'], ['label', 'Drive name', '8TB 1']], function (row, get) {
+                var out = h('span', {});
+                return [btn('Check write access', function () { writeTest(get('prefix'), false, out); }, 'at-small'), btn('Test write (temp file)', function () { writeTest(get('prefix'), true, out); }, 'at-small'), out];
+            });
+            f.drives = drives;
+            f.preferred = text(s.preferredDrive); f.preferred.placeholder = 'e.g. 8TB 2 (empty = off)';
+            f.container = text(s.containerName);
+            body.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Drives' }),
+                h('p', { className: 'at-muted', text: 'Name your drives by path prefix; the longest matching prefix wins. Used for drive labels, free space and the optional preferred-drive score. "Check write access" writes nothing; "Test write" creates and deletes an empty hidden file. Saved paths only.' }),
+                drives.el, h('div', { className: 'at-form' }, field('Preferred drive (adds the "preferred drive" points)', f.preferred), field('Docker container name (for copy-ready commands)', f.container))));
+
+            var w = s.weights || {};
+            var wf = {};
+            var wGrid = h('div', { className: 'at-form' });
+            [['managedPath', 'Path managed by Sonarr/Radarr'], ['completeness', 'Completeness (episodes)'], ['onDisk', 'Files exist on disk'], ['quality', 'Quality (resolution)'], ['metadata', 'Metadata (ids, images, overview)'], ['watchHistory', 'Watch history'], ['dateAdded', 'Date added'], ['preferredDrive', 'Preferred drive'], ['highConfidenceGap', 'High confidence: minimum point gap'], ['mediumConfidenceGap', 'Medium confidence: minimum point gap (below = Low, never auto-selected)']].forEach(function (p) {
+                wf[p[0]] = num(w[p[0]]);
+                wGrid.appendChild(field(p[1] + ' (default ' + defaults[p[0]] + ')', wf[p[0]]));
+            });
+            var older = check('Older copy gets the date-added points (untick: newer copy)', w.preferOlder);
+            var epDup = check('Also look for duplicate episodes inside one series', s.scanEpisodeDuplicates, 'Slower on large libraries.');
+            body.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Duplicate scoring' }), wGrid, older.el, epDup.el,
+                h('div', { className: 'at-row' }, btn('Reset weights to defaults', function () { api('POST', 'Settings/ResetWeights', {}).then(function () { showTab('settings', true); }, function (e) { body.appendChild(errorBox(e)); }); }, 'at-small')),
+                h('p', { className: 'at-muted', text: 'Free space on a drive is never a factor. Rescan duplicates after changing weights.' })));
+
+            var sched = check('Allow scheduled scans', s.scheduledScansEnabled, 'The task "Admin Toolkit: scan duplicates and library health" has no trigger by default. Tick this AND add a trigger in Dashboard > Scheduled Tasks. It only scans; it never changes anything.');
+            f.retention = num(s.activityRetentionDays); f.subLang = text(s.auditSubtitleLanguage); f.audioLang = text(s.auditAudioLanguage); f.bitrate = num(s.highBitrateMbps); f.months = num(s.notWatchedMonths);
+            body.appendChild(h('div', { className: 'at-card' }, h('h3', { text: 'Scans, audits and log' }), sched.el,
+                h('div', { className: 'at-form' }, field('Activity log retention (days)', f.retention), field('Subtitle audit language (ISO 639-2, e.g. eng)', f.subLang), field('Audio audit language', f.audioLang), field('High bitrate warning (Mbps)', f.bitrate), field('"Not watched" period (months)', f.months))));
+
+            var out = h('div', {});
+            var saveBtn = btn('Save settings', function () {
+                var cfg = Object.assign({}, s, {
+                    safeMode: safe.input.checked, dryRunDefault: dry.input.checked, confirmationLevel: f.confirmationLevel.value,
+                    sonarrUrl: f.sonarrUrl.value, sonarrApiKey: f.sonarrKey.value, radarrUrl: f.radarrUrl.value, radarrApiKey: f.radarrKey.value, jellyseerrUrl: f.jellyseerrUrl.value, jellyseerrApiKey: f.jellyseerrKey.value,
+                    arrPathMappings: f.arrMaps.value(), imageSearchProvider: f.provider.value, imageSearchApiKey: f.searchKey.value, googleSearchEngineId: f.engineId.value,
+                    driveMappings: f.drives.value(), preferredDrive: f.preferred.value, containerName: f.container.value, scanEpisodeDuplicates: epDup.input.checked, scheduledScansEnabled: sched.input.checked,
+                    activityRetentionDays: Number(f.retention.value), auditSubtitleLanguage: f.subLang.value, auditAudioLanguage: f.audioLang.value, highBitrateMbps: Number(f.bitrate.value), notWatchedMonths: Number(f.months.value),
+                    weights: Object.assign({}, w, { preferOlder: older.input.checked })
+                });
+                Object.keys(wf).forEach(function (k) { cfg.weights[k] = Number(wf[k].value); });
+                saveBtn.disabled = true;
+                api('POST', 'Settings', cfg).then(function () {
+                    clear(out).appendChild(h('div', { className: 'at-ok', text: 'Saved.' }));
+                    state.loaded = { settings: true };
+                    loadStatus().then(function () { setTimeout(function () { showTab('settings', true); }, 600); });
+                }, function (e) { clear(out).appendChild(errorBox(e)); }).then(function () { saveBtn.disabled = false; });
+            }, 'at-primary');
+            body.appendChild(h('div', { className: 'at-card' }, h('div', { className: 'at-row' }, saveBtn), out,
+                h('p', { className: 'at-muted', text: 'Uninstalling Admin Toolkit removes its cache and activity log (' + (state.status ? state.status.dataDirectory : '<data>/admintoolkit') + '). It never writes into other plugins or the home screen, so nothing else needs cleaning up.' })));
+        }
+
+        function writeTest(path, probe, out) {
+            clear(out).appendChild(h('span', { className: 'at-muted', text: 'Checking...' }));
+            api('POST', 'Settings/TestWrite', { path: path, probe: probe }).then(function (r) { clear(out).appendChild(h('span', { className: r.ok ? 'at-ok' : 'at-error', text: r.message })); }, function (e) { clear(out).appendChild(errorBox(e)); });
+        }
+
+        function rowsEditor(rows, cols, extra) {
+            var el = h('div', {});
+            var list = h('div', {});
+            el.appendChild(list);
+            var items = [];
+            function addRow(r) {
+                var inputs = {};
+                var row = h('div', { className: 'at-row' });
+                cols.forEach(function (c) { inputs[c[0]] = h('input', { type: 'text', value: r[c[0]] || '', placeholder: c[2], title: c[1], style: 'flex:1;min-width:11em' }); row.appendChild(inputs[c[0]]); });
+                var item = { inputs: inputs };
+                if (extra) { append(row, extra(row, function (k) { return inputs[k].value; })); }
+                row.appendChild(btn('Remove', function () { items.splice(items.indexOf(item), 1); row.remove(); }, 'at-small'));
+                items.push(item);
+                list.appendChild(row);
+            }
+            rows.forEach(addRow);
+            el.appendChild(h('div', { className: 'at-muted', text: cols.map(function (c) { return c[1]; }).join(' \u2192 ') }));
+            el.appendChild(btn('Add row', function () { addRow({}); }, 'at-small'));
+            return { el: el, value: function () { return items.map(function (it) { var o = {}; cols.forEach(function (c) { o[c[0]] = it.inputs[c[0]].value.trim(); }); return o; }).filter(function (o) { return cols.every(function (c) { return o[c[0]]; }); }); } };
+        }
+
+        // ---------- start ----------
+        function start() {
+            if (state.startedAt && Date.now() - state.startedAt < 1500) { return; }
+            state.startedAt = Date.now();
+            var saved = safeStore('adminToolkit.tab');
+            loadStatus().catch(function () { /* the status bar shows the error; tabs still load */ }).then(function () {
+                showTab(saved && loaders[saved] ? saved : 'duplicates', true);
+            });
+        }
+        page.addEventListener('pageshow', start);
+        page.addEventListener('viewshow', start);
+        setTimeout(function () { if (!state.startedAt && document.body.contains(page)) { start(); } }, 0);
+    })();
+    </script>
+</div>
+</body>
+</html>

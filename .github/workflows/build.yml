@@ -1,0 +1,77 @@
+name: Build
+
+on:
+  push:
+    branches: ['**']
+    tags-ignore: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Jellyfin version consistency (csproj = tests = ApiCompat = build.yaml targetAbi)
+        run: python3 .github/scripts/check_versions.py
+
+      - name: Release scripts work (manifest generation + verification on a throwaway copy)
+        run: |
+          echo test > t.zip
+          printf '[]' > m.json
+          python3 .github/scripts/update_manifest.py --manifest m.json --build-yaml build.yaml --version 9.9.9.9 --source-url https://example.invalid/x.zip --zip t.zip --changelog "ci check"
+          python3 .github/scripts/verify_manifest.py m.json
+
+      - name: Build
+        run: dotnet build Jellyfin.Plugin.AdminToolkit.sln -c Release
+
+      - name: Unit tests (also regenerates the API sample used by the page smoke test)
+        env:
+          ADMIN_TOOLKIT_SAMPLE_OUT: ${{ github.workspace }}/tests/client/fixtures/api-sample.json
+        run: dotnet test Jellyfin.Plugin.AdminToolkit.sln -c Release --no-build
+
+      - name: Binary compatibility with the target Jellyfin version (blocking)
+        run: |
+          v=$(python3 -c "import re;print(re.search(r'targetAbi:\s*\"([0-9]+\.[0-9]+\.[0-9]+)', open('build.yaml').read()).group(1))")
+          dotnet build tools/ApiCompat -c Release -p:JellyfinVersion=$v
+          dotnet tools/ApiCompat/bin/Release/net9.0/ApiCompat.dll src/Jellyfin.Plugin.AdminToolkit/bin/Release/net9.0/Jellyfin.Plugin.AdminToolkit.dll
+
+      - name: Package must contain only the plugin DLL (no SkiaSharp or Jellyfin copies)
+        run: |
+          dotnet publish src/Jellyfin.Plugin.AdminToolkit/Jellyfin.Plugin.AdminToolkit.csproj -c Release -o publish
+          ls publish
+          if ls publish | grep -Ei '^(SkiaSharp|Jellyfin\.(Controller|Model|Common|Data|Extensions)|MediaBrowser)' ; then echo "::error::publish output contains server assemblies"; exit 1; fi
+          mkdir -p artifacts && (cd publish && zip -j ../artifacts/admin-toolkit-dev.zip Jellyfin.Plugin.AdminToolkit.dll)
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Admin page script parses
+        run: |
+          python3 - <<'PY'
+          import re
+          s = open('src/Jellyfin.Plugin.AdminToolkit/Web/adminToolkit.html').read()
+          open('admin.js', 'w').write(re.search(r'<script type="text/javascript">(.*?)</script>', s, re.S).group(1))
+          PY
+          node --check admin.js
+
+      - name: Admin page smoke test (headless Chromium, mocked API)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node tests/client/admin-smoke.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: admin-toolkit-dev
+          path: artifacts/admin-toolkit-dev.zip
