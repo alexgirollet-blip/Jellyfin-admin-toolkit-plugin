@@ -26,7 +26,9 @@ jobs:
       - name: Build
         run: dotnet build Jellyfin.Plugin.AdminToolkit.sln -c Release
 
-      - name: Unit tests
+      - name: Unit tests (also regenerates the API sample used by the page smoke test)
+        env:
+          ADMIN_TOOLKIT_SAMPLE_OUT: ${{ github.workspace }}/tests/client/fixtures/api-sample.json
         run: dotnet test Jellyfin.Plugin.AdminToolkit.sln -c Release --no-build
 
       - name: Binary compatibility with the target Jellyfin version (blocking)
