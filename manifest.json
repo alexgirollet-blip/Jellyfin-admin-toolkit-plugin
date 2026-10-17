@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "guid": "41dca3a8-262c-4dd5-b4b1-ee38bef2c31d",
+    "name": "Admin Toolkit",
+    "overview": "Admin-only dashboard toolkit: duplicates, artwork, library health and storage.",
+    "description": "A Dashboard page for administrators with tabs for finding and resolving duplicate movies and shows (with a transparent keep/remove score and Sonarr/Radarr-aware removal), editing artwork with Jellyfin's providers or web image search (with real transparency detection), library health checks, storage insight per drive, and an activity log. Read-only by default: safe mode is on for a new install and every destructive action needs a preview and confirmation. No home-screen footprint and no changes to other plugins.",
+    "owner": "alexgirollet-blip",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Merge pull request #1 from alexgirollet-blip/claude/relaxed-curie-rbtmj5\n\nAdmin Toolkit 1.0.0.0 for Jellyfin 10.11.10",
+        "targetAbi": "10.11.10.0",
+        "sourceUrl": "https://github.com/alexgirollet-blip/Jellyfin-admin-toolkit-plugin/releases/download/v1.0.0.0/admin-toolkit_1.0.0.0.zip",
+        "checksum": "1c8151764b762b300bbc937f41cea2df",
+        "timestamp": "2026-10-17T21:33:46Z"
+      }
+    ]
+  }
+]
